@@ -1,7 +1,7 @@
-# CHAT SERVER PYTHON FLASK
+# FLIGHT MANAGEMENT PYTHON FLASK
 ## `PYTHON FLASK` + `SQL WORKBENCH`
 
-## Recommend: Python `3.10` + SQL Workbench `8.0.31` + IDE `PYCHARM`
+## Recommend: Python `3.9` + SQL Workbench `5.7.43` + IDE `PYCHARM`
 
 > GETTING STARTED:
 1. Clone repository and open
