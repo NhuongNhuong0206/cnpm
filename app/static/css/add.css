@@ -1,0 +1,49 @@
+.color {
+     background-color: #ffffff;
+     color: #3c4043;
+}
+
+.color__form{
+    background-color: #ffffff;
+}
+
+.error-text{
+    color: #ee0b0b;
+    padding-left: 12px;
+    font-size: 1.1rem;
+}
+
+.gachChan{
+    text-decoration: none;
+}
+
+.er_text{
+    color: red;
+    font-size: 50px;
+}
+
+.er-con2{
+    padding: 200px 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 20px;
+}
+
+.er-con{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ok{
+    color: #16e27b;
+    margin-top: 100px;
+    font-size: 40px;
+    background-color: #fff;
+    border: 4px solid #dd3e3e ;
+    border-radius: 10px;
+    padding: 14px 40px;
+    font-weight: bold;
+}

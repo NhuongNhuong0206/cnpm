@@ -1,0 +1,187 @@
+/* Mobile & tablet */
+@media (max-width: 1023px) {
+    :root {
+        --header-height: 68px !important;
+        --navbar-height: 0px !important;
+    }
+    .home-filter.hide-on-mobile-tablet {
+        display: none;
+    }
+    .header__navbar.hide-on-mobile-tablet {
+        display: none;
+    }
+    .grid.wide .header-with-search {
+        margin-top: 0;
+    }
+    .header__suggest.hide-on-mobile-tablet {
+        display: none;
+    }
+    .header-with-search {
+        height: var(--header-with-search-height);
+    }
+    .grid.wide {
+        padding-top: 14px;
+    }
+    .app__container {
+        margin-top: calc(var(--header-height) + var(--header-sort-bar-height));
+    }
+    .header {
+        position: fixed;
+        z-index: 10;
+        width: 100%;
+        top: 0;
+    }
+    .header__cart .header__cart-list {
+        position: fixed;
+        top: var(--header-height);
+        right: 0;
+        width: 100%;
+        padding: 0 calc((100% - 654px) / 2);
+    }
+    .header__cart-list::after {
+        display: none;
+    }
+    .category .category__heading {
+        margin-top: 11px;
+    }
+    .app__container .header__sort-bar {
+        display: flex;
+    }
+    .col.l-10.m-12.c-12 .category-mobile {
+        display: block;
+    }
+}
+
+/* tablet */
+
+@media (min-width: 740px) and (max-width: 1023px) {
+    .hide-on-tablet {
+        display: none;
+    }
+    .header-with-search .header__cart {
+        width: 80px;
+        text-align: right;
+    }
+    .app__container {
+        margin-top: var(--header-height);
+    }
+    .grid.wide .app__content {
+        padding-top: 24px;
+    }
+}
+
+/* Mobile */
+
+@media (max-width: 739px) {
+    .hide-on-mobile {
+        display: none;
+    }
+    .grid.wide .header-with-search {
+        justify-content: space-between;
+    }
+    .header__logo {
+        width: unset;
+    }
+
+    .header-with-search {
+        padding: 0 20px;
+    }
+    .header-with-search .header__search__suggest {
+        flex: none;
+    }
+    .header-with-search .header__logo {
+        width: 0;
+    }
+    .header-with-search .header__logo-link {
+        display: block;
+        width: 158px;
+        line-height: 0;
+    }
+    .header-with-search .header__cart {
+        width: 51px;
+    }
+    .header__search__suggest .header__search {
+        position: fixed;
+        top: var(--header-height);
+        right: 0;
+        left: 0;
+        box-shadow: 0 2px rgba(0, 0, 00, 0.05);
+        height: 46px;
+        border-top: 2px solid rgba(0, 0, 00, 0.05);
+        border-left: 2px solid rgba(0, 0, 00, 0.05);
+        border-right: 2px solid rgba(0, 0, 00, 0.05);
+        padding: 0 16px;
+        animation: MobileSearchSideIn linear 0.3s;
+        display: flex;
+        display: none;
+    }
+    @keyframes MobileSearchSideIn {
+        from {
+            top: calc(var(--header-height) / 2);
+            opacity: 0;
+        }
+        to {
+            top: var(--header-height);
+            opacity: 1;
+        }
+    }
+
+    .header-with-search .header__mobile-search {
+        display: block;
+    }
+
+    .pagination .pagination-item {
+        margin: 0;
+    }
+
+    .pagination-item .pagination-item_link {
+        --height: 28px;
+        font-size: 1.6rem;
+        min-width: 36px;
+    }
+
+    .row.app__content {
+        margin: 0 4px;
+    }
+
+    .header__logo-link .header__logo-img {
+        width: 100px;
+    }
+
+    .header.header__height {
+        --header-height: 58px !important;
+        display: flex;
+        align-items: center;
+    }
+    .header__sort-bar {
+        --header-height: 58px !important;
+    }
+
+    .app__container {
+        margin-top: var(--header-height);
+    }
+    .grid.wide .app__content {
+        padding-top: 16px;
+    }
+
+    .grid.wide.nonePadding {
+        padding-top: 0;
+    }
+    .footer__heading {
+        text-align: center;
+    }
+    .footer__list-item-link {
+        justify-content: center;
+    }
+    .padding {
+        padding: 24px;
+    }
+
+    .footer__download {
+        justify-content: center;
+    }
+    .footer__download--app-link {
+        display: block;
+        padding: 6px 8px;
+    }
+}
