@@ -10,6 +10,7 @@ def index():
 
 @app.route('/login')
 def login():
+
     return render_template('signIn.html')
 
 
@@ -55,10 +56,14 @@ def logup():
                 er_m_tex = 'Bạn chưa nhập Mật khẩu hoặc Mật khẩu không khớp'
             else:
                 for data in util.DuLieuSoDinhDanh():
-
                     if data.__eq__(identification):
                         er_m_num = 8
                         er_m_tex = 'Mã số định danh đã được đăng kí tài khoản, hãy đăng nhập'
+                        break
+                for data in util.DuLieuEmail():
+                    if data.__eq__(email):
+                        er_m_num = 9
+                        er_m_tex = 'Email đã được đăng kí tài khoản, hãy đăng nhập'
                         break
                 if not er_m_num.__eq__(8):
                     if len(passw1) >= 8:
@@ -71,7 +76,7 @@ def logup():
                         print('lỗi nè')
 
         except Exception as ex:
-            er_m = 'Có lỗi ' + str(ex)
+            er_m = 'Lỗi Server'
             er = 0
 
     return render_template('signUp.html', er_m_num=er_m_num, er_m_tex=er_m_tex, er_m=er_m, er=er)

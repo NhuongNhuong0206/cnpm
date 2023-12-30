@@ -34,3 +34,16 @@ def DuLieuSoDinhDanh():
     identification_values = [id[0] for id in identifications]
     return identification_values
 
+def DuLieuEmail():
+    # Thực hiện truy vấn để lấy cột email từ bảng User
+    email = db.session.query(User.identification).all()
+
+    # email là một danh sách các tuple, chúng ta có thể trích xuất giá trị từ mỗi tuple
+    email_values = [id[0] for id in email]
+    return email_values
+
+
+def DuLieuPass():
+    pass1 = db.session.query(User.passw1).all()
+    pass1_values = [id[0] for id in pass1]
+    return pass1_values
