@@ -47,76 +47,24 @@
                             </div>
 
                             <div class="auth-form__form">
-<!--                                <div class="auth-form__form__group">-->
-<!--                                    <input id="name" name="name" type="text" class="auth-form__form__input" {% if er_m_num == 1 %}-->
-<!--                                           autofocus {% endif %} placeholder="Nhập họ và tên của bạn">-->
-<!--                                </div>-->
-<!--                                {% if er_m_num == 1 %}-->
-<!--                                <i class="fa-solid fa-exclamation"></i>-->
-<!--                                <span class="error-text">{{er_m_tex}}</span>-->
-<!--                                {% endif %}-->
-
-<!--                                <div class="auth-form__form__group">-->
-<!--                                    <input id="birthdate" name="birthdate" type="date" {% if er_m_num == 1 %}-->
-<!--                                           autofocus {% endif %} class="auth-form__form__input"-->
-<!--                                           placeholder="Nhập ngày sinh của bạn">-->
-<!--                                </div>-->
-<!--                                {% if er_m_num == 5 %}-->
-<!--                                <span class="error-text">{{er_m_tex}}</span>-->
-<!--                                {% endif %}-->
-<!--                                <div class="auth-form__form__group">-->
-<!--                                    <input id="address" name="address" type="text" class="auth-form__form__input"-->
-<!--                                           placeholder="Nhập địa chỉ của bạn">-->
-<!--                                </div>-->
-<!--                                <div class="auth-form__form__group">-->
-<!--                                    <input id="identification" name="identification" {% if er_m_num == 7 or  er_m_num == 8 %}-->
-<!--                                           autofocus {% endif %}  type="text" class="auth-form__form__input"-->
-<!--                                           placeholder="Nhập số căn cước công dân của bạn">-->
-<!--                                </div>-->
-<!--                                {% if er_m_num == 7 or er_m_num == 8 %}-->
-<!--                                <span class="error-text">{{er_m_tex}}</span>-->
-<!--                                {% endif %}-->
-<!--                                <div class="auth-form__form__group">-->
-<!--                                    <input id="nationality" name="nationality" type="text" class="auth-form__form__input"-->
-<!--                                           placeholder="Nhập quốc tịch của bạn">-->
-<!--                                </div>-->
-<!--                                <div class="auth-form__form__group">-->
-<!--                                    <input id="phone" name="phone" type="text" class="auth-form__form__input" {% if er_m_num== 2 %}-->
-<!--                                           autofocus {% endif %} placeholder="Nhập số điện thoại của bạn">-->
-<!--                                </div>-->
-<!--                                {% if er_m_num == 2 %}-->
-<!--                                <span class="error-text">{{er_m_tex}}</span>-->
-<!--                                {% endif %}-->
                                 <div class="auth-form__form__group">
-                                    <input id="email" name="email" type="text" class="auth-form__form__input" {% if er_m_num== 3 %}
+                                    <input id="email" name="email" type="text" class="auth-form__form__input" {% if er_m_num== 1 %}
                                            autofocus {% endif %} placeholder="Nhập email của bạn">
                                 </div>
-                                {% if er_m_num == 3 %}
+                                {% if er_m_num == 1 %}
                                 <span class="error-text">{{er_m_tex}}</span>
                                 {% endif %}
 
                                 <div class="auth-form__form__group">
-                                    <input id="passw1" name="passw1" type="password" {% if er_m_num == 6 %} autofocus {% endif %} class="auth-form__form__input"
+                                    <input id="passw1" name="passw1" type="password" {% if er_m_num == 2 %} autofocus {% endif %} class="auth-form__form__input"
                                            placeholder="Nhập mật khẩu của bạn">
                                 </div>
-                                {% if er_m_num == 6 %}
+                                {% if er_m_num == 2 %}
                                 <span class="error-text">{{er_m_tex}}</span>
                                 {% endif %}
-<!--                                <div class="auth-form__form__group">-->
-<!--                                    <input id="passw2" name="passw2" type="password" {% if er_m_num == 4 %} autofocus {% endif %}-->
-<!--                                           class="auth-form__form__input"-->
-<!--                                           placeholder="Nhập lại mật khẩu của bạn">-->
-<!--                                </div>-->
-<!--                                {% if er_m_num == 4 %}-->
-<!--                                <span class="error-text">{{er_m_tex}}</span>-->
-<!--                                {% endif %}-->
                             </div>
 
                             <div class="auth-form__controls">
-                                <!--                    <button class="btn btn&#45;&#45;nolmal auth-form__controls-back">-->
-
-                                <!--                        TRỞ LẠI-->
-                                <!--                    </button>-->
                                 <button id="btn_signUp" onclick="DuLieuNguoiDung()" type="submit" class="btn btn--primary pa">
                                     ĐĂNG NHẬP
                                 </button>
@@ -148,4 +96,4 @@
 {% endif %}
 </body>
 {% endblock %}
-{% block js %}<script src="{{ url_for('static', filename='js/signUp.js') }}"></script>{% endblock%}
+{% block js %}<script src="{{ url_for('static', filename='js/signIn.js') }}"></script>{% endblock%}
