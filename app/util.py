@@ -36,10 +36,11 @@ def DuLieuSoDinhDanh():
 
 def DuLieuEmail():
     # Thực hiện truy vấn để lấy cột email từ bảng User
-    email = db.session.query(User.identification).all()
+    email = db.session.query(User.email).all()
 
     # email là một danh sách các tuple, chúng ta có thể trích xuất giá trị từ mỗi tuple
-    email_values = [id[0] for id in email]
+
+    email_values = [idE[0] for idE in email]
     return email_values
 
 
@@ -47,3 +48,9 @@ def DuLieuPass():
     pass1 = db.session.query(User.passw1).all()
     pass1_values = [id[0] for id in pass1]
     return pass1_values
+
+
+def check_login(email, passw1):
+    if email and passw1:
+        passw1 = str(hashlib.md5(passw1.strip().encode('utf-8')).hexdigest())
+        return User.query.filter(User.email.__eq__(email.strip()), User.passw1.__eq__(passw1)).first()
