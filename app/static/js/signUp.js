@@ -35,3 +35,4 @@ function LayThongTinNguoiDung() {
 
 a = document.getElementById('btn_signUp')
 console.log(a)
+
