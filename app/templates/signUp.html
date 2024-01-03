@@ -13,7 +13,7 @@
                 <div class="modal">
                     <div class="madal__overlay er-con">
                         <div class="auth-form er-con2">
-                            <div class="auth-form__container er_text ">Lỗi server</div>
+                            <div class="auth-form__container er_text ">{{er_m}}</div>
                             <a href="{{ url_for('index') }}" class="ok">ok</a>
                         </div>
                     </div>
@@ -88,10 +88,10 @@
                                 <span class="error-text">{{er_m_tex}}</span>
                                 {% endif %}
                                 <div class="auth-form__form__group">
-                                    <input id="email" name="email" type="text" class="auth-form__form__input" {% if er_m_num== 3 %}
+                                    <input id="email" name="email" type="text" class="auth-form__form__input" {% if er_m_num== 3 or er_m_num == 9 %}
                                            autofocus {% endif %} placeholder="Nhập email của bạn">
                                 </div>
-                                {% if er_m_num == 3 %}
+                                {% if er_m_num == 3 or er_m_num == 9%}
                                 <span class="error-text">{{er_m_tex}}</span>
                                 {% endif %}
 

@@ -14,6 +14,10 @@ app.config["PAGE_SIZE"] = 6
 
 
 db = SQLAlchemy(app=app)
+<<<<<<< HEAD
 login = LoginManager(app=app)# khởi tạo login_manager cho app
 
 
+=======
+login_manager = LoginManager(app=app)
+>>>>>>> d34f8fb53b4166c8f11a9380b51ef0eddeeca24a

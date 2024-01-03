@@ -1,23 +1,85 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Home</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
-            integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
-            crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
-            integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
-            crossorigin="anonymous"></script>
-</head>
+{% extends 'layout/base.html' %}
+
+{% block title %}Trang chủ{% endblock %}
+
+{% block content %}
 <body>
+<<<<<<< HEAD
 Home- tìm kiếm chuyến bay
 <ul class="navbar-nav me-auto">
     <li class="nav-item">
         <a class="nav-link active" href="{{ url_for('logup') }}">Đăng kí</a>
     </li>
 </ul>
+=======
+<h2 class="text-center fw-bold my-5">Tìm chuyến bay</h2>
+<div class="justify-content-center row">
+    <form method="post" action="" class="w-50 my-auto p-4 bg-white shadow-lg rounded-1">
+        <div class="d-flex gap-3">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="ticketType" id="ticketType-1" >
+                <label class="form-check-label" for="ticketType-1">
+                    Vé một chiều
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="ticketType" id="ticketType-2" checked>
+                <label class="form-check-label" for="ticketType-2">
+                    Vé khứ hồi
+                </label>
+            </div>
+        </div>
+        <div class="mt-2 ">
+            <div>
+                <label for="ap_from" class="form-label">Từ:</label>
+                <input class="form-control" placeholder="Nơi bạn xuất phát"
+                       {% if session['inp_search'] %} value="{{ '%s - %s' % (session['inp_search'].airport_from.id,
+                session['inp_search'].airport_from.name) }}" {% endif %}
+                list="airports" name="from" id="ap_from">
+            </div>
+
+            <div>
+                <label for="ap_to" class="form-label">Đến:</label>
+                <input class="form-control" placeholder="Nơi bạn muốn đến"
+                       {% if session['inp_search'] %} value="{{ '%s - %s' % (session['inp_search'].airport_to.id,
+                session['inp_search'].airport_to.name) }}" {% endif %}
+                list="airports" name="to" id="ap_to">
+            </div>
+
+        </div>
+        <div class="mt-2 d-flex gap-3">
+            <div class="flex-grow-1">
+                <label for="departure_date" class="form-label">Ngày đi:</label>
+                <input class="form-control" {% if session['inp_search'] %} value="{{ session['inp_search'].time_start
+                }}" {% endif %} name="dayStart" id="time_start" type="date">
+            </div>
+            <div class="flex-grow-1" id="returnDateContainer">
+                <label for="return_date" class="form-label">Ngày về:</label>
+                <input  class="form-control" {% if session['inp_search'] %} value="{{ session['inp_search'].time_start
+                }}" {% endif %} name="ReturnDate" id="return_date" type="date">
+            </div>
+
+            <div class="align-self-end">
+                <label for="ticket_type" class="form-label">Ghế:</label>
+                <select id="ticket_type" name="rankChair" class="form-select">
+                    <option {% if session[
+                    'inp_search'] and session["inp_search"].ticket_type=="1" %}selected="selected"{% endif %}
+                    value="1">Hạng 1</option>
+                    <option {% if session[
+                    'inp_search'] and session['inp_search'].ticket_type=="2" %}selected="selected"{% endif %}
+                    value="2">Hạng 2</option>
+                </select>
+            </div>
+        </div>
+
+
+        <button id="submit-btn" type="submit" class="mt-4 w-100 btn btn-primary">Tìm chuyến bay</button>
+    </form>
+</div>
+</div>
+>>>>>>> d34f8fb53b4166c8f11a9380b51ef0eddeeca24a
 </body>
-</html>
+{% endblock %}
+{% block js %}
+<script src="{{ url_for('static', filename='js/homeAndFindFlights.js') }}"></script>
+{% endblock %}
