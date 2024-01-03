@@ -56,5 +56,5 @@ def check_login(email, passw1):
         return User.query.filter(User.email.__eq__(email.strip()), User.passw1.__eq__(passw1)).first()
 
 
-def get_user_by_id(user_id):
-    return User.query.get(user_id)
+def get_user_by_id(id):
+    return User.query.get(id)

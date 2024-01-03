@@ -1,8 +1,9 @@
 from flask import render_template, request, redirect,url_for, jsonify, session
-from app import app, util, login
+from app import app, util, login_manager
 from validate_email import validate_email
 from datetime import datetime
-from flask_login import login_user
+from flask_login import login_user, logout_user
+
 
 @app.route('/')
 def index():
@@ -26,9 +27,17 @@ def login():
             er_m_tex = 'Nhập sai email hoặc mật khẩu, hãy kiểm tra'
     return render_template('signIn.html', er_m_num=er_m_num, er_m_tex=er_m_tex)
 
-@login.user_loader
-def user_load(user_id):
-    return util.get_user_by_id(user_id=user_id)
+
+@app.route('/log-out')
+def logOut():
+    logout_user()
+    return redirect(url_for('index'))
+
+
+@login_manager.user_loader
+def user_load(id):
+    return util.get_user_by_id(id=id)
+
 
 @app.route('/logup', methods=['get', 'post'])
 def logup():
