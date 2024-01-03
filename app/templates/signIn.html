@@ -1,10 +1,99 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<h1>Trang đăng nhập</h1>
+{% extends 'layout/base.html' %}
+
+{% block title %}Đăng nhập{% endblock %}
+
+{% block content %}
+<body onload="LayThongTinNguoiDung()">
+{% if er == 0 %}
+<div class="app">
+        <div class="modal">
+            <div class="modal__body">
+
+                <!-- modal dùng chung -->
+                <div class="modal">
+                    <div class="madal__overlay er-con">
+                        <div class="auth-form er-con2">
+                            <div class="auth-form__container er_text ">{{er_m}}</div>
+                            <a href="{{ url_for('index') }}" class="ok">ok</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+ <div class="app">
+    <div class="modal">
+        <div class="modal__body">
+
+            <!-- modal dùng chung -->
+            <div class="modal">
+                <div class="madal__overlay">
+                </div>
+                <form id="myForm" method='post' action="{{url_for('login')}}" class="modal__body color__form">
+                    <!-- Register form -->
+                    <div class="auth-form">
+                        <div class="auth-form__container">
+                            <div class="auth-form-header">
+                                <a class="gachChan" href="{{ url_for('login') }}"><h3 class="auth-form__heading">
+                                    Đăng nhập
+                                </h3>
+                                </a>
+                                <a class="gachChan" href="{{ url_for('logup') }}">
+                                <span class="auth-form__swithBtn">
+                                Đăng kí
+                                </span>
+                                </a>
+                            </div>
+
+                            <div class="auth-form__form">
+                                <div class="auth-form__form__group">
+                                    <input id="email" name="email" type="text" class="auth-form__form__input" {% if er_m_num== 1 %}
+                                           autofocus {% endif %} placeholder="Nhập email của bạn">
+                                </div>
+                                {% if er_m_num == 1 %}
+                                <span class="error-text">{{er_m_tex}}</span>
+                                {% endif %}
+
+                                <div class="auth-form__form__group">
+                                    <input id="passw1" name="passw1" type="password" {% if er_m_num == 2 %} autofocus {% endif %} class="auth-form__form__input"
+                                           placeholder="Nhập mật khẩu của bạn">
+                                </div>
+                                {% if er_m_num == 2 %}
+                                <span class="error-text">{{er_m_tex}}</span>
+                                {% endif %}
+                            </div>
+
+                            <div class="auth-form__controls">
+                                <button id="btn_signUp" onclick="DuLieuNguoiDung()" type="submit" class="btn btn--primary pa">
+                                    ĐĂNG NHẬP
+                                </button>
+                            </div>
+                        </div>
+
+
+                        <div class="auth-form__socials">
+                            <a href="" class="btn btn-size-s auth-form__socials--facebook btn--with--icon color">
+                                <i class=" auth-form__socials-icon fa-brands fa-facebook"></i>
+                                <span class="auth-form__socials-title">
+                            Kết nối với FaceBook
+                        </span>
+                            </a>
+                            <a href="" class="btn btn-size-s auth-form__socials--google btn--with--icon color">
+                                <i class=" auth-form__socials-icon fa-brands fa-google color-icon"></i>
+
+                                <span class="auth-form__socials-title">
+                            Kết nối với Google
+                        </span>
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
 </body>
-</html>
+{% endblock %}
+{% block js %}<script src="{{ url_for('static', filename='js/signIn.js') }}"></script>{% endblock%}
