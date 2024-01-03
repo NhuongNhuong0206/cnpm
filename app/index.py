@@ -1,7 +1,8 @@
 from flask import render_template, request, redirect,url_for, jsonify, session
-from app import app, util
+from app import app, util, login
 from validate_email import validate_email
 from datetime import datetime
+from flask_login import login_user
 
 @app.route('/')
 def index():
@@ -17,14 +18,17 @@ def login():
         email = request.form.get('email')
         passw1 = request.form.get('passw1')
         user_1 = util.check_login(email=email, passw1=passw1)
-        print(user_1)
         if user_1:
+            login_user(user=user_1)
             return render_template('homeAndFindFlights.html', er_m_num=er_m_num, er_m_tex=er_m_tex)
         else:
             er_m_num = 1
-            er_m_tex = 'Lỗi'
+            er_m_tex = 'Nhập sai email hoặc mật khẩu, hãy kiểm tra'
     return render_template('signIn.html', er_m_num=er_m_num, er_m_tex=er_m_tex)
 
+@login.user_loader
+def user_load(user_id):
+    return util.get_user_by_id(user_id=user_id)
 
 @app.route('/logup', methods=['get', 'post'])
 def logup():

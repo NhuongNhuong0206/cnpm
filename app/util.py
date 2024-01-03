@@ -54,3 +54,7 @@ def check_login(email, passw1):
     if email and passw1:
         passw1 = str(hashlib.md5(passw1.strip().encode('utf-8')).hexdigest())
         return User.query.filter(User.email.__eq__(email.strip()), User.passw1.__eq__(passw1)).first()
+
+
+def get_user_by_id(user_id):
+    return User.query.get(user_id)
