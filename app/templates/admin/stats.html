@@ -1,0 +1,11 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+<h1 class="text-center text-success my-3">BÁO CÁO THỐNG KÊ</h1>
+{% if current_user.is_authenticated %}
+<h1>DUOCJ</h1>
+{% else %}
+<h>Khong</h>
+{% endif %}
+{% endblock %}
+

@@ -1,7 +1,14 @@
 from flask import render_template, request, redirect, jsonify, session
-from app import app, util
+from app import app, util, controllers
 from validate_email import validate_email
 from datetime import datetime
+
+from app.model import User
+app.add_url_rule('/api/admin_rules', 'create_admin_rules', controllers.create_admin_rules,
+                 methods=['post'])
+app.add_url_rule('/api/user/confirm', 'confirm_user', controllers.confirm_user,
+                 methods=['post'])
+
 
 @app.route('/')
 def index():
@@ -77,5 +84,18 @@ def logup():
     return render_template('signUp.html', er_m_num=er_m_num, er_m_tex=er_m_tex, er_m=er_m, er=er)
 
 
+
+
+# ! Lỗi 'function' object has no attribute 'user_loader'
+# @login.user_loader
+# def load_user(user_id):
+#     return User.query.get(int(user_id))
+
+
+
+
 if __name__ == '__main__':
+    from app import admin
+
+
     app.run(debug=True)
