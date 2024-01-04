@@ -1,10 +1,6 @@
 
-from flask import render_template, request, redirect, jsonify, session
-from app import app, util, controllers, dao
-
-from flask import render_template, request, redirect,url_for, jsonify, session
-from app import app, util, login_manager
-
+from flask import render_template, request, redirect, jsonify, session, url_for
+from app import app, util, controllers, dao, login_manager, admin
 from validate_email import validate_email
 from datetime import datetime
 from flask_login import login_user, logout_user
@@ -19,9 +15,18 @@ app.add_url_rule('/api/user/confirm', 'confirm_user', controllers.confirm_user,
                  methods=['post'])
 
 
+app.add_url_rule('/oauth', 'login_oauth', controllers.login_oauth)
+app.add_url_rule('/callback', 'oauth_callback', controllers.oauth_callback)
+
+
 @app.route('/')
 def index():
     return render_template('homeAndFindFlights.html')
+
+
+# @app.route('/flight')
+# def index():
+#     return render_template('./admin/createFlight.html')
 
 
 @app.route('/login', methods=['get', 'post'])
@@ -153,7 +158,7 @@ def logup():
 
 
 if __name__ == '__main__':
-    from app import admin
+    from app.admin import *
 
+    app.run(host='localhost', port=5000, debug=True)
 
-    app.run(debug=True)

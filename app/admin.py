@@ -1,4 +1,4 @@
-from flask import redirect
+from flask import redirect, session
 from flask_admin.contrib.sqla import ModelView
 from app import app, db, dao, login_manager
 from flask_admin import Admin, BaseView, expose, AdminIndexView
@@ -16,10 +16,7 @@ class AuthenticatedAdmin(ModelView):
 #
 class AuthenticatedUser(BaseView):
     def is_accessible(self):
-
         return current_user.is_authenticated
-
-
 
 
 # giao dien san bay
@@ -35,6 +32,7 @@ class AuthenticatedAdmin(AuthenticatedAdmin):
     def is_accessible(self):
         return current_user.is_authenticated and current_user.user_role == UserRoleEnum.ADMIN
 
+      
 class MyAdminView(AdminIndexView):
     @expose('/')
     def index(self):
@@ -50,6 +48,7 @@ class LogoutView(BaseView):
     @expose('/')
     def index(self):
         logout_user()
+        session.clear()
         return redirect('/admin')
 
     def ís_accessible(self):
@@ -62,8 +61,7 @@ class Flight_routerView(AuthenticatedAdmin):
     can_view_details = True
 
 
-
-
+    
 # Thay doi chuyến bay
 class RulesView(BaseView):
     @expose('/')
@@ -72,6 +70,7 @@ class RulesView(BaseView):
         rules_list = dao.get_admin_rules_list()
         return self.render('admin/rules.html', rules=rules, rules_list=rules_list)
 
+      
 # Báo cáo thống kê
 class AdminStartView(BaseView):
     @expose("/")
@@ -79,13 +78,9 @@ class AdminStartView(BaseView):
         return self.render('admin/stats.html')
 
 
-admin = Admin(app=app, name='Quản lý', template_mode='bootstrap4', index_view=MyAdminView())
+admin = Admin(app=app, name='Quản lý', template_mode='bootstrap4',index_view=MyAdminView())
 admin.add_view(AirportView(Airport, db.session, name="SÂN BAY"))
 admin.add_view(Flight_routerView(Flight_route, db.session, name="TUYẾN BAY"))
 admin.add_view(AdminStartView(name='Báo cáo thống kê'))
 admin.add_view(RulesView(name='Thay đổi chuyến bay'))
 admin.add_view(LogoutView(name='Đăng xuất'))
-
-
-
-
