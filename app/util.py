@@ -1,6 +1,6 @@
 import json, os
 from app import app, db
-from app.model import User
+from app.model import User,UserRoleEnum
 import hashlib
 import re
 
@@ -53,8 +53,13 @@ def DuLieuPass():
 def check_login(email, passw1):
     if email and passw1:
         passw1 = str(hashlib.md5(passw1.strip().encode('utf-8')).hexdigest())
-        return User.query.filter(User.email.__eq__(email.strip()), User.passw1.__eq__(passw1)).first()
-
-
+        return User.query.filter(User.email.__eq__(email.strip()),
+                                 User.passw1.__eq__(passw1)).first()
+def check_role(role):
+    if role:
+        if role.__eq__('UserRoleEnum.ADMIN'):
+            return 1
+        else:
+            return 0
 def get_user_by_id(id):
     return User.query.get(id)

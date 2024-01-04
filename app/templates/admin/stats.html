@@ -1,10 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+
+{% extends 'admin/master.html' %}
+{% block body %}
+<h1 class="text-center text-success my-3">BÁO CÁO THỐNG KÊ</h1>
+{% if current_user.is_authenticated %}
+<h1>DUOCJ</h1>
+{% else %}
+<h>Khong</h>
+{% endif %}
+{% endblock %}
+
+
