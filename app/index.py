@@ -1,8 +1,18 @@
-from flask import render_template, request, redirect,url_for, jsonify, session
-from app import app, util, login_manager, controllers, admin
+
+from flask import render_template, request, redirect, jsonify, session, url_for
+from app import app, util, controllers, dao, login_manager, admin
 from validate_email import validate_email
 from datetime import datetime
 from flask_login import login_user, logout_user
+from app.model import UserRoleEnum
+
+
+from app.model import User, UserRoleEnum
+
+app.add_url_rule('/api/admin_rules', 'create_admin_rules', dao.create_admin_rules,
+                 methods=['post'])
+app.add_url_rule('/api/user/confirm', 'confirm_user', controllers.confirm_user,
+                 methods=['post'])
 
 
 app.add_url_rule('/oauth', 'login_oauth', controllers.login_oauth)
@@ -30,12 +40,26 @@ def login():
         user_1 = util.check_login(email=email, passw1=passw1)
         if user_1:
             login_user(user=user_1)
-            return render_template('homeAndFindFlights.html', er_m_num=er_m_num, er_m_tex=er_m_tex)
+            print(user_1.user_role)
+            if util.check_role(user_1.user_role).__eq__(0):
+                return render_template('homeAndFindFlights.html', er_m_num=er_m_num, er_m_tex=er_m_tex)
+            else:
+
+                return redirect('/admin')
         else:
             er_m_num = 1
             er_m_tex = 'Nhập sai email hoặc mật khẩu, hãy kiểm tra'
     return render_template('signIn.html', er_m_num=er_m_num, er_m_tex=er_m_tex)
 
+
+@app.route('/admin-login', methods=['post'])
+def singin_admin():
+    email = request.form.get('email')
+    passw1 = request.form.get('passw1')
+    user_1 = util.check_login(email=email, passw1=passw1, role=UserRoleEnum.ADMIN)
+    if user_1:
+        login_user(user=user_1)
+    return redirect('/admin')
 
 @app.route('/log-out')
 def logOut():
@@ -121,7 +145,20 @@ def logup():
     return render_template('signUp.html', er_m_num=er_m_num, er_m_tex=er_m_tex, er_m=er_m, er=er)
 
 
+
+
+# ! Lỗi 'function' object has no attribute 'user_loader'
+# @login.user_loader
+# def load_user(user_id):
+#     return User.query.get(int(user_id))
+
+# @login_manager.user_loader
+# def load_user(user_id):
+#     return User.query.get(int(user_id))
+
+
 if __name__ == '__main__':
     from app.admin import *
 
     app.run(host='localhost', port=5000, debug=True)
+

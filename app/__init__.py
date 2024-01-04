@@ -22,7 +22,9 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:%s@localhost/cnpm?
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 app.config["PAGE_SIZE"] = 6
 
+
 db = SQLAlchemy(app=app)
+
 login_manager = LoginManager(app=app)
 
 
