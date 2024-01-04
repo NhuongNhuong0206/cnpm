@@ -1,15 +1,21 @@
 import json, os
-from app import app, db
+from flask import request
+from app import app, db, flow
 from app.model import User
 import hashlib
 import re
-
+import google.auth.transport.requests
+from pip._vendor import cachecontrol
+import requests
+from google.oauth2 import id_token
 
 def add_user(name, passw1, **kwargs): #biến **kwargs dùng để nhập những tham số không bắc buộc
     passw1 = str(hashlib.md5(passw1.strip().encode('utf-8')).hexdigest())
     user = User(name=name.strip(), passw1=passw1, email=kwargs.get('email'), avatar=kwargs.get('avatar'), address=kwargs.get('address'), identification=kwargs.get('identification'), nationality=kwargs.get('nationality'), birthdate=kwargs.get('birthdate'))
+    print(user)
     db.session.add(user)
     db.session.commit()
+    return user
 
 
 def kiem_tra_so(so, do_dai):
@@ -58,3 +64,18 @@ def check_login(email, passw1):
 
 def get_user_by_id(id):
     return User.query.get(id)
+
+def get_user_oauth():
+    flow.fetch_token(authorization_response=request.url)
+
+    credentials = flow.credentials
+    request_session = requests.session()
+    cached_session = cachecontrol.CacheControl(request_session)
+    token_request = google.auth.transport.requests.Request(session=cached_session)
+    user_oauth = id_token.verify_oauth2_token(
+        id_token=credentials._id_token,
+        request=token_request,
+        audience=os.getenv("OAUTH_CLIENT_ID")
+    )
+    print("Hiền vy 1.2")
+    return user_oauth

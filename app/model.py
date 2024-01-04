@@ -19,15 +19,15 @@ class UserRoleEnum(enum.Enum):
 
 class User(BaseModel, UserMixin):
     name = Column(String(50), nullable=False)
-    passw1 = Column(String(100), nullable=False)
+    passw1 = Column(String(100))
     avatar = Column(String(100),
                     default='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg')
     user_role = Column(Enum(UserRoleEnum), default=UserRoleEnum.USER)
     # receipts = relationship('Receipt', backref='user', lazy=True)
     address = Column(String(100))
-    identification = Column(String(20), unique=True, nullable=False)
+    identification = Column(String(20), unique=True, nullable=True)
     email = Column(String(50), nullable=False)
-    nationality = Column(String(50), nullable=False)
+    nationality = Column(String(50))
     birthdate = Column(DateTime)
 
     def __str__(self):
