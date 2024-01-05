@@ -114,14 +114,14 @@ def logup():
                 er_m_tex = 'Bạn chưa nhập Mật khẩu hoặc Mật khẩu không khớp'
             else:
                 for dataI in util.DuLieuSoDinhDanh():
-                    if dataI.__eq__(identification):
+                    if dataI.__eq__(identification) == True:
                         er_m_num = 8
                         er_m_tex = 'Mã số định danh đã được đăng kí tài khoản, hãy đăng nhập'
                         print("Mã số định danh trùng")
                         break
 
                 for dataE in util.DuLieuEmail():
-                    if dataE.__eq__(email):
+                    if dataE.__eq__(email) == True:
                         er_m_num = 9
                         er_m_tex = 'Email đã được đăng kí tài khoản, hãy đăng nhập'
                         print("Email trùng")
