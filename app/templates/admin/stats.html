@@ -1,12 +1,124 @@
-
 {% extends 'admin/master.html' %}
+
 {% block body %}
-<h1 class="text-center text-success my-3">BÁO CÁO THỐNG KÊ</h1>
-{% if current_user.is_authenticated %}
-<h1>DUOCJ</h1>
-{% else %}
-<h>Khong</h>
-{% endif %}
+<h1 class="text-center text-info">THỐNG KÊ BÁO CÁO</h1>
+
+<div class="d-flex align-items-center">
+    <select class="select-type form-control" style="width: 100px">
+        <option value="1" selected>Bảng</option>
+        <option value="2">Biểu đồ</option>
+    </select>
+       <select class="ml-3 select-month form-control" style="width: 120px">
+            <option value="0" name="0" id="0" selected>Toàn bộ</option>
+            <option value="1"  name="1" id="1">Tháng 1</option>
+            <option value="2"  name="2" id="2">Tháng 2</option>
+            <option value="3"  name="3" id="3">Tháng 3</option>
+            <option value="4"  name="4" id="4">Tháng 4</option>
+            <option value="5"  name="5" id="5">Tháng 5</option>
+            <option value="6"  name="6" id="6">Tháng 6</option>
+            <option value="7" name="7" id="7">Tháng 7</option>
+            <option value="8"  name="8" id="8">Tháng 8</option>
+            <option value="9"  name="9" id="9">Tháng 9</option>
+            <option value="10"  name="10" id="10">Tháng 10</option>
+            <option value="11"  name="11" id="11">Tháng 11</option>
+            <option value="12"  name="12" id="12">Tháng 12</option>
+        </select>
+    </select>
+       <select class="ml-3 select-flight-route form-control" style="width: 250px">
+            <option value="r0" name="r0" id="r0" selected>Tuyến bay</option>
+
+        </select>
+</div>
+
+<div class="row">
+    <div class="col-md-5 col-xs-12">
+        <table class="table">
+            <tr>
+                <th>Truyến bay</th>
+                 <th>Tháng</th>
+                <th>Tổng tiền</th>
+
+            </tr>
+
+        </table>
+    </div>
+    <div class="col-md-7 col-xs-12">
+        <canvas id="myChart2"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  let data=[];
+  let labels=[];
+
+  let mData=[0,30,40,14,25];
+  let mLabels=['s1','s2','s3','s4','s5'];
+
+  {% for s in mon_stats %}
+  mData.push({{s[1]}})
+  mLabels.push({{s[0]}})
+  {% endfor %}
+
+  window.onload = function() {
+    const ctx2 = document.getElementById('myChart2');
+
+    new Chart(ctx2, {
+      type: 'bar',
+      data: {
+        labels: mLabels,
+        datasets: [{
+          label: '# Doanh thu',
+          data: mData,
+          borderWidth: 1,
+          backgroundColor: ['red', 'green', 'blue', 'gold', 'brown']
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  }
+
+    // Sử dụng JavaScript để gửi yêu cầu Ajax đến endpoint của Flask và điền dữ liệu vào thẻ select
+    var select = document.querySelector('.select-flight-route');
+    var endpoint = '/api/flight-routes'; // Địa chỉ endpoint của Flask
+
+    fetch(endpoint)
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(route => {
+                var option = document.createElement('option');
+                option.value = route.id;
+                option.innerText = route.name;
+                select.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error:', error));
+
+
+    const selectMonth = document.querySelector('.select-month')
+     selectMonth.onchange = (e) => {
+        const val = e.target.value
+        switch(val) {
+            default:
+                getData(val)
+                break;
+        }
+    }
+
+    function getData(selectedValue ) {
+      fetch(`/revenue-mon-stats/${selectedValue}`, { method: 'GET' })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data); // Dữ liệu được trả về từ server
+                // Xử lý dữ liệu (nếu cần)
+            })
+            .catch(error => console.error('Error:', error));
+}
+</script>
 {% endblock %}
-
-
