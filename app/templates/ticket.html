@@ -1,0 +1,32 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+{% for t in t_list_json %}
+<div class="row">
+    <table class="table mt-4" style="border: 1px solid #ccc;">
+        <thead>
+            <tr>
+                <th scope="col" class="text-center" colspan="2">VÉ CHUYẾN BAY</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Chuyến bay: <span class="fw-bold">{{ t['flight_info'] }}</span></td>
+                <td>Hành khách: <span class="fw-bold">{{ t['passenger_name'] }}</span></td>
+            </tr>
+            <tr>
+                <td>CMND/CCCD: <span class="fw-bold">{{ t['id_card'] }}</span></td>
+                <td>Điện thoại: <span class="fw-bold">{{ t['phone_number'] }}</span></td>
+            </tr>
+            <tr>
+                <td>Hạng vé: <span class="fw-bold">{{ t['ticket_class'] }}</span></td>
+                <td>Giá tiền: <span class="fw-bold">{{ t['price'] }} VND</span></td>
+            </tr>
+            <tr>
+                <td colspan="2">Thời gian đặt vé: <span class="fw-bold">{{ t['booking_time'] }}</span></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endfor %}
+{% endblock %}

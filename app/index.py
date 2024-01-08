@@ -1,12 +1,9 @@
-
 from flask import render_template, request, redirect, jsonify, session, url_for
 from app import app, util, controllers, dao, login_manager, admin
 from validate_email import validate_email
 from datetime import datetime
 from flask_login import login_user, logout_user
 from app.model import UserRoleEnum
-
-
 from app.model import User, UserRoleEnum
 
 app.add_url_rule('/api/admin_rules', 'create_admin_rules', dao.create_admin_rules,
@@ -14,15 +11,67 @@ app.add_url_rule('/api/admin_rules', 'create_admin_rules', dao.create_admin_rule
 app.add_url_rule('/api/user/confirm', 'confirm_user', controllers.confirm_user,
                  methods=['post'])
 
-
 app.add_url_rule('/oauth', 'login_oauth', controllers.login_oauth)
 app.add_url_rule('/callback', 'oauth_callback', controllers.oauth_callback)
 
 
 @app.route('/')
 def index():
+    # Lấy dữ liệu từ form
+    ticket_type = request.form.get('ticketType')
+    print(ticket_type)
+    from_location = request.form.get('from')
+    to_location = request.form.get('to')
+    day_start = request.form.get('dayStart')
+    rank_chair = request.form.get('rankChair')
+    # Kiểm tra giá trị trong session
+
+    # Kiểm tra các giá trị nhận từ form
+    print(ticket_type)
+    print(from_location)
+    print(to_location)
+    print(day_start)
+    print(rank_chair)
+
+    # Thực hiện truy vấn từ cơ sở dữ liệu
+    flights_result = dao.query_flights(from_location, to_location, day_start, rank_chair)
+
+    # Lưu kết quả vào session để sử dụng ở route /fight_list
+    session['data_search'] = flights_result
+    session['inp_search'] = {'from_location': from_location,
+                             'to_location': to_location,
+                             'day_start': day_start,
+                             'ticket_type': ticket_type,
+                             'rank_chair': rank_chair}
+    print(session['inp_search'])
+
+    print(session['data_search'])
+
+    # Chuyển hướng đến trang flightList.html
     return render_template('homeAndFindFlights.html')
 
+
+
+# @app.route('/search_flights', methods=['POST'])
+# def search_flights():
+
+
+@app.route('/fight_list', methods=['GET', 'POST'])
+def fight_list():
+    # Lấy dữ liệu từ session để hiển thị trên trang flightList.html
+    data_search = session.get('data_search', [])
+    inp_search = session.get('inp_search', {})
+    a = dao.get_airport()
+    print(a)
+    print()
+    # Render trang flightList.html với dữ liệu tìm kiếm
+    return render_template('flightList.html', data_search=data_search, inp_search=inp_search, a=a)
+
+
+@app.route('/ticket')
+def ticket():
+    # Thực hiện các thao tác cần thiết và trả về template ticket.html
+    return render_template('ticket.html')
 
 # @app.route('/flight')
 # def index():
@@ -93,7 +142,7 @@ def logup():
             birthdate = datetime.strptime(birthdate, '%Y-%m-%d').date()  # yyyy-mm-dd
         try:
 
-            if not name.strip(): #kiểm tra xem tên được nhập chưa
+            if not name.strip():  # kiểm tra xem tên được nhập chưa
                 er_m_num = 1
                 er_m_tex = 'Bạn chưa nhập Họ và tên'
             elif not birthdate or birthdate > current_date:
@@ -102,14 +151,17 @@ def logup():
             elif not identification.strip() or util.kiem_tra_so(identification, 12).__eq__(False):
                 er_m_num = 7
                 er_m_tex = 'Bạn chưa nhập hoặc nhập Mã định danh không hợp lệ'
-            elif not phone.strip() or util.kiem_tra_so(phone, 10).__eq__(False): # kiểm tra xem số điện thoại được nhập chưa, và phải là số hay không
+            elif not phone.strip() or util.kiem_tra_so(phone, 10).__eq__(
+                    False):  # kiểm tra xem số điện thoại được nhập chưa, và phải là số hay không
                 er_m_num = 2
                 er_m_tex = 'Bạn chưa nhập Số điện thoại hoặc số điện thoại không hợp lệ'
-            elif not email.strip() or not validate_email(email):#kiểm tra xem đã nhập email chưa và đã nhập đúng định dạng email không
+            elif not email.strip() or not validate_email(
+                    email):  # kiểm tra xem đã nhập email chưa và đã nhập đúng định dạng email không
                 er_m_num = 3
                 er_m_tex = 'Bạn chưa nhập Email hoặc Email không hợp lệ'
 
-            elif not (passw1.strip() and passw2.strip() and passw1.strip().__eq__(passw2.strip())):# kiểm tra xem mật khẩu được nhập chưa và mật khẩu có trùng nhau
+            elif not (passw1.strip() and passw2.strip() and passw1.strip().__eq__(
+                    passw2.strip())):  # kiểm tra xem mật khẩu được nhập chưa và mật khẩu có trùng nhau
                 er_m_num = 4
                 er_m_tex = 'Bạn chưa nhập Mật khẩu hoặc Mật khẩu không khớp'
             else:
@@ -163,19 +215,7 @@ def book_ticket():
     return render_template('book_tickets.html', current_date=datetime.now().strftime('%Y-%m-%d'))
 
 
-
-# ! Lỗi 'function' object has no attribute 'user_loader'
-# @login.user_loader
-# def load_user(user_id):
-#     return User.query.get(int(user_id))
-
-# @login_manager.user_loader
-# def load_user(user_id):
-#     return User.query.get(int(user_id))
-
-
 if __name__ == '__main__':
     from app.admin import *
 
     app.run(host='localhost', port=5000, debug=True)
-
