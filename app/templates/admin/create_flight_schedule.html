@@ -1,0 +1,127 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+<div class="container mt-4">
+    <form method="post" action="">
+        <div class="row my-4">
+            <div class="col-lg-6">
+                <label for="airport-from" class="form-label">Sân bay đi:</label>
+                <select name="airport_from" class="form-select" required>
+                    {% for airport in airport_list %}
+                        <option value="{{ airport.id }}">{{ airport.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-lg-6">
+                <label for="airport-to" class="form-label">Sân bay đến:</label>
+                <select name="airport_to" class="form-select" required>
+                    {% for airport in airport_list %}
+                        <option value="{{ airport.id }}">{{ airport.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-lg-3">
+                <label for="time-start" class="form-label">Thời gian đi:</label>
+                <input id="time_start" name="time_start" type="datetime-local" class="form-control" required>
+            </div>
+            <div class="col-lg-3">
+                <label for="time-end" class="form-label">Thời gian đến (dự kiến):</label>
+                <input id="time_end" name="time_end" type="datetime-local" class="form-control" required>
+            </div>
+            <div class="col-lg-3">
+                <label for="quantity-1st" class="form-label">Số lượng vé hạng thương gia:</label>
+                <input id="quantity_1st"  name="quantity_1st" type="number" class="form-control" required min="0" max="500">
+            </div>
+            <div class="col-lg-3">
+                <label for="quantity-2nd" class="form-label">Số lượng vé hạng thường:</label>
+                <input id="quantity_2nd" name="quantity_2nd" type="number" class="form-control" required min="0" max="500">
+            </div>
+        </div>
+        <!-- Các trường khác tương tự -->
+
+        <div class="row airport-between">
+            <div class="col-lg-3">
+                <label for="airport-bw" class="form-label">Sân bay trung gian:</label>
+                <select name="airport_bw" class="form-select">
+                     <option value="" selected></option>
+                    {% for airport in airport_list %}
+                        <option value="{{ airport.id }}">{{ airport.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-lg-3">
+                <label for="airport-bw-stay" class="form-label">Thời gian dừng (phút):</label>
+                <input id="airport_bw_stay" name="airport_bw_stay" type="number" class="form-control" min="0">
+            </div>
+            <div class="col-lg-6">
+                <label for="airport-bw-note" class="form-label">Ghi chú:</label>
+                <textarea id="airport_bw_note" name="airport_bw_note" style="height: 100px;" type="text" class="form-control"></textarea>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2 mt-4">
+            <button type="submit" class="btn btn-primary">Tạo lịch</button>
+            <div style="width: 20px;"></div>
+            <button type="" class="btn btn-primary" onclick="">
+                Thêm sân bay trung gian (Còn lại)
+            </button>
+        </div>
+    </form>
+
+
+    <h5 class="my-3">LỊCH CHUYẾN BAY ĐÃ TẠO (Chờ xét duyệt)</h5>
+    <table class="mt-4 table">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Sân đi</th>
+                <th scope="col">Sân trung gian</th>
+                <th scope="col">Sân đến</th>
+                <th scope="col">Thời gian dừng</th>
+                <th scope="col">Thời gian đi</th>
+                <th scope="col">Thời gian đến</th>
+                <th scope="col">Vé hạng thương gia</th>
+                <th scope="col">Vé hạng thường</th>
+                <th scope="col">Ghi chú</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for flight in list_flight_sche %}
+
+                <tr>
+                    <th scope="col">{{ flight.id }}</th>
+                    <th scope="col">{{airport_list[list_light_route[loop.index0].departure_airport_id - 1]}}</th>
+                    <th scope="col">{{airport_list[list_light_route[loop.index0].bw_airport_id - 1]}}</th>
+                    <th scope="col">{{airport_list[list_light_route[loop.index0].arrival_airport_id - 1]}}</th>
+                    <th scope="col">{{flight_list[loop.index0].time_stop}}</th>
+                    <th scope="col">{{a[loop.index0].departure_time}}</th>
+                     <th scope="col">{{a[loop.index0].arrival_time}}</th>
+                     <th scope="col">
+                         {% for nu in list_num %}
+                             {% if nu.seat_class_id.__eq__(1) and nu.flight_id.__eq__(flight.id)%}
+                                    {{nu.num}}
+                             {% endif %}
+                         {% endfor %}
+                     </th>
+                    <th scope="col">
+                        {% for nu in list_num %}
+                             {% if nu.seat_class_id.__eq__(2) and nu.flight_id.__eq__(flight.id)%}
+                                    {{nu.num}}
+                             {% endif %}
+                         {% endfor %}
+                    </th>
+                    <th scope="col">{{a[loop.index0].note}}</th>
+                    <td>
+                        <form method="post" action="{{ url_for('delete_flight', flight_id=flight.id, return_url=request.url) }}">
+                             <button type="submit" class="btn btn-danger">Xóa</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+ <script src="{{ url_for('static', filename='js/create_flight_schedule.js') }}"></script>
+{% endblock %}
