@@ -1,10 +1,15 @@
 from datetime import datetime
 from sqlalchemy import func, and_
+<<<<<<< Updated upstream
 from app.model import Flight_regulations, User, Number_of_seats, Bill, Flight, Ticket, Flight_schedule, \
     Flight_Flight_schedule, Flight_route, Flight_route, Ticket_type, Bill, Airport
 
 from sqlalchemy.orm import aliased
 
+=======
+from app.model import Flight_regulations, User, Number_of_seats, Bill, Flight, Ticket, Flight_schedule,Flight_Flight_schedule, \
+    Flight_route, Ticket_type, Bill, Airport
+>>>>>>> Stashed changes
 from flask import session, render_template, request, jsonify
 from app import db
 import hashlib
@@ -193,6 +198,7 @@ def get_flight():
     return f_list
 
 
+
 def get_flight_sche():
     f_list = Flight_schedule.query.filter().all()
     return f_list
@@ -217,9 +223,15 @@ def get_Flight_route():
 def lay_lich(list_flight):
     flight_schedules = []
     for f in list_flight:
+<<<<<<< Updated upstream
         flight_schedules.extend(db.session.query(Flight_schedule). \
                                 join(Flight_Flight_schedule). \
                                 filter(Flight_Flight_schedule.flight_id.__eq__(f.id)).all())
+=======
+        flight_schedules.extend(db.session.query(Flight_schedule).\
+            join(Flight_Flight_schedule).\
+            filter(Flight_Flight_schedule.flight_id.__eq__(f.id)).all())
+>>>>>>> Stashed changes
     print(flight_schedules)
     return flight_schedules
 

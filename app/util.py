@@ -26,8 +26,8 @@ def add_Airport(name):
     db.session.commit()
     return airport
 
-def add_Flight_route(airport_from_id, airport_to_id,bw_airport_id, **kwargs):
-    flight_route = Flight_route(arrival_airport_id=airport_to_id, departure_airport_id = airport_from_id,bw_airport_id=bw_airport_id, name_flight_route=kwargs.get('name_flight_route'))
+def add_Flight_route(airport_from_id, airport_to_id,bw_airport_id,name_flight_route,price, **kwargs):
+    flight_route = Flight_route(arrival_airport_id=airport_to_id, departure_airport_id = airport_from_id,bw_airport_id=bw_airport_id, name_flight_route= name_flight_route, price=price)
     db.session.add(flight_route)
     db.session.commit()
     return flight_route

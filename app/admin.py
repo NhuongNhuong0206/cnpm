@@ -1,5 +1,6 @@
 from flask import redirect, session, request, render_template, url_for
 from flask_admin.contrib.sqla import ModelView
+from sqlalchemy import Column, Integer, String
 from app import app, db, dao, login_manager,util
 from flask_admin import Admin, BaseView, expose, AdminIndexView
 from datetime import datetime
@@ -125,16 +126,27 @@ class FlightScheView(AuthenticatedStaff):
             airport_to = request.form.get('airport_to')
             time_start = request.form.get('time_start')
             time_end = request.form.get('time_end')
-
             quantity_1st = request.form.get('quantity_1st')
             quantity_2nd = request.form.get('quantity_2nd')
             airport_bw = request.form.get('airport_bw')
             airport_bw_stay = request.form.get('airport_bw_stay')
             airport_bw_note = request.form.get('airport_bw_note')
+            price = request.form.get('price')
             if time_start and time_end:
                 time_start = datetime.strptime(time_start, "%Y-%m-%dT%H:%M")
                 time_end = datetime.strptime(time_end, "%Y-%m-%dT%H:%M")
-            ap = util.add_Flight_route(airport_from_id=airport_from, airport_to_id=airport_to, bw_airport_id=airport_bw)
+            name_fl_r=''
+            for a in airport_list:
+                if int(airport_from).__eq__(a.id):
+                    name_fl_r = name_fl_r + a.name
+                    break
+            for a in airport_list:
+                if int(airport_to).__eq__(a.id):
+                    name_fl_r = name_fl_r + ' -> ' + a.name
+                    break
+            print(name_fl_r)
+            # print(name_fl_r, 'in tên tuyến bay'), Flight_route=name_fl_r
+            ap = util.add_Flight_route(airport_from_id=airport_from, airport_to_id=airport_to, bw_airport_id=airport_bw,name_flight_route= name_fl_r, price=price)
             time = util.add_Flight_schedule(departure_time=time_start, arrival_time=time_end,
                                             note=airport_bw_note)
             if quantity_1st and quantity_2nd:
@@ -145,19 +157,19 @@ class FlightScheView(AuthenticatedStaff):
                 flight_Flight_schedule = util.add_Flight_Flight_schedule(flight_schedule_id=time.id, flight_id=flight.id)
 
         flight_list = dao.get_flight()# lấy tất cả các chuyến bay
-
+        print(flight_list, 'danh sách chuyến bay')
         list_light_route = dao.get_Flight_route()# lấy tất cả tuyến bay
-
+        print(list_light_route, 'danh sách sân bay')
         # list_flight_sche = dao.get_flight_sche()# lấy tất cả các lịch bay
         list_flight_sche = dao.lay_lich(flight_list)
+        print(list_flight_sche, 'danh sách lịch bay')
         a = dao.lay_chuyen_bay_ung_voi_lich_bay(list_flight_sche)#trả ra chuyến bay
+        print(a, 'danh sách lịch bay ứng với chuyến bay')
         list_num = dao.get_Number_of_seats()
         # print(list_light_route[1].arrival_airport_id)
         return self.render('admin/create_flight_schedule.html',
                            airport_list=airport_list, list_flight_sche=list_flight_sche,
                            a=a, list_light_route=list_light_route, flight_list=flight_list, list_num=list_num)
-
-
 
 @app.route('/delete_flight/<int:flight_id>', methods=['POST'], endpoint='delete_flight')
 def delete_flight(flight_id):
