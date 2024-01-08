@@ -1,0 +1,79 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+<body onload="lay()">
+<div class="bg-light d-flex w-100 justify-content-between p-2 rounded-3 shadow-sm mt-4 align-items-center">
+    <div>
+        <div><span id="fromTo"></span></div>
+        <div>
+            <span id="dateInfo"></span> | 1 hành khách
+        </div>
+    </div>
+    <a href="/" class="btn btn-primary">
+        Đổi tìm kiếm
+    </a>
+</div>
+
+{% if not session['data_search'] %}
+<h3 class="text-danger text-center mt-4">Không có chuyến bay nào phù hợp!</h3>
+{% else %}
+<h3 class="text-center text-uppercase my-4">Danh sách chuyến bay phù hợp</h3>
+{% for d in session['data_search'] %}
+<div class="bg-light p-2 shadow-sm rounded-3 mt-3">
+    <div class="px-3 d-flex justify-content-between align-items-center">
+        <div>
+            <div class="d-flex gap-5 justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="text-center">
+                        {{ d.time_start.day }}/{{ d.time_start.month }} {{ d.time_start.hour }}:{{ d.time_start.minute
+                        }}
+                        <br>
+                        {{ d.fl_route1.name }}
+                    </div>
+                    <div class="mx-3"> →</div>
+                    <div class="text-center">
+                        {{ d.time_end.day }}/{{ d.time_end.month }} {{ d.time_end.hour }}:{{ d.time_end.minute }}
+                        <br>
+                        {{ d.fl_router2.name }}
+                    </div>
+                </div>
+                <div>
+                    <div>Trạm dừng: {{ d.airport_between_list.quantity }}</div>
+                    <div>Ước tính: {{ moment(d.time_end).fromTime(d.time_start) }}</div>
+                </div>
+
+            </div>
+
+        </div>
+        <div>
+            <div class="mb-2">
+                {{ "{:,.0f}".format(d.price) }} VND / khách
+            </div>
+            <a href="/form_ticket/{{ d.id }}" class="btn w-100 btn-success">Chọn</a>
+        </div>
+    </div>
+    <div class="">
+        <span role="button" class="ps-3 fst-italic" data-bs-toggle="collapse" data-bs-target="#collapseExample-{{d.id}}"
+              aria-expanded="false" aria-controls="collapseExample">
+            Chi tiết chuyến bay
+        </span>
+        <div class="collapse" id="collapseExample-{{d.id}}">
+            <div class="card card-body">
+                {% for abw in d.airport_between_list.data %}
+                <div> - Sân bay trung gian {{ abw.airport.name }} (dừng {{ abw.time_stay }} giờ)</div>
+                {% endfor %}
+                <div> ● Vé hạng thương gia: {{ d.quantity_ticket_1st_booked }}/{{ d.quantity_ticket_1st }}</div>
+                <div> ● Vé hạng thường: {{ d.quantity_ticket_2nd_booked }}/{{ d.quantity_ticket_2nd }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+{% block js %}
+<script src="{{ url_for('static', filename='js/homeAndFindFlights.js') }}"></script>
+{% endblock%}
+</body>
+{% endblock %}
+
+
