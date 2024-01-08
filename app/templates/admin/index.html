@@ -18,34 +18,6 @@
 
 </h1>
 
-{% else %}
-
-                <form id="myForm" method='post' action="{{url_for('singin_admin')}}" class="modal__body color__form">
-                     <div class="auth-form__form">
-                                <div class="auth-form__form__group">
-                                    <input id="email" name="email" type="text" class="auth-form__form__input" {% if er_m_num== 1 %}
-                                           autofocus {% endif %} placeholder="Nhập email của bạn">
-                                </div>
-                                {% if er_m_num == 1 %}
-                                <span class="error-text">{{er_m_tex}}</span>
-                                {% endif %}
-
-                                <div class="auth-form__form__group">
-                                    <input id="passw1" name="passw1" type="password" {% if er_m_num == 2 %} autofocus {% endif %} class="auth-form__form__input"
-                                           placeholder="Nhập mật khẩu của bạn">
-                                </div>
-                                {% if er_m_num == 2 %}
-                                <span class="error-text">{{er_m_tex}}</span>
-                                {% endif %}
-                            </div>
-
-                            <div class="auth-form__controls">
-                                <button id="btn_signUp" onclick="DuLieuNguoiDung()" type="submit" class="btn btn--primary pa">
-                                    ĐĂNG NHẬP
-                                </button>
-                            </div>
-                </form>
-
 {% endif %}
 {% endblock %}
 

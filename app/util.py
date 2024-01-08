@@ -1,7 +1,10 @@
 import json, os
+
+from sqlalchemy import func
+
 from app import app, db, flow
 from flask import request
-from app.model import User,UserRoleEnum
+from app.model import User,UserRoleEnum, Flight_route,Flight, Number_of_seats, Ticket_type
 import hashlib
 import re
 import google.auth.transport.requests
@@ -83,3 +86,7 @@ def get_user_oauth():
         audience=os.getenv("OAUTH_CLIENT_ID")
     )
     return user_oauth
+
+# def check_changTicket(idTicked):
+#     if idTicked:
+#         id_flight = Flight.query.filter_by(id=user_flight_code).first()

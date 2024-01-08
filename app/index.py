@@ -1,19 +1,23 @@
 
+
 from flask import render_template, request, redirect, jsonify, session, url_for
 from app import app, util, controllers, dao, login_manager, admin
 from validate_email import validate_email
 from datetime import datetime
 from flask_login import login_user, logout_user
-from app.model import UserRoleEnum
-
+from app.model import UserRoleEnum, Flight
 
 from app.model import User, UserRoleEnum
 
-app.add_url_rule('/api/admin_rules', 'create_admin_rules', dao.create_admin_rules,
-                 methods=['post'])
+
 app.add_url_rule('/api/user/confirm', 'confirm_user', controllers.confirm_user,
                  methods=['post'])
-
+app.add_url_rule('/admin/changeTickets', 'changeTickets', dao.changeTickets,
+                 methods=['post'])
+app.add_url_rule('/api/admin_rules', 'create_admin_rules', dao.create_admin_rules,
+                 methods=['post'])
+app.add_url_rule('/api/flight-routes', 'get_flight_routes', dao.get_flight_routes,
+                 methods=['get', 'post'])
 
 app.add_url_rule('/oauth', 'login_oauth', controllers.login_oauth)
 app.add_url_rule('/callback', 'oauth_callback', controllers.oauth_callback)
@@ -61,6 +65,7 @@ def singin_admin():
         login_user(user=user_1)
     return redirect('/admin')
 
+
 @app.route('/log-out')
 def logOut():
     logout_user()
@@ -93,7 +98,7 @@ def logup():
             birthdate = datetime.strptime(birthdate, '%Y-%m-%d').date()  # yyyy-mm-dd
         try:
 
-            if not name.strip(): #kiểm tra xem tên được nhập chưa
+            if not name.strip():  # kiểm tra xem tên được nhập chưa
                 er_m_num = 1
                 er_m_tex = 'Bạn chưa nhập Họ và tên'
             elif not birthdate or birthdate > current_date:
@@ -102,14 +107,17 @@ def logup():
             elif not identification.strip() or util.kiem_tra_so(identification, 12).__eq__(False):
                 er_m_num = 7
                 er_m_tex = 'Bạn chưa nhập hoặc nhập Mã định danh không hợp lệ'
-            elif not phone.strip() or util.kiem_tra_so(phone, 10).__eq__(False): # kiểm tra xem số điện thoại được nhập chưa, và phải là số hay không
+            elif not phone.strip() or util.kiem_tra_so(phone, 10).__eq__(
+                    False):  # kiểm tra xem số điện thoại được nhập chưa, và phải là số hay không
                 er_m_num = 2
                 er_m_tex = 'Bạn chưa nhập Số điện thoại hoặc số điện thoại không hợp lệ'
-            elif not email.strip() or not validate_email(email):#kiểm tra xem đã nhập email chưa và đã nhập đúng định dạng email không
+            elif not email.strip() or not validate_email(
+                    email):  # kiểm tra xem đã nhập email chưa và đã nhập đúng định dạng email không
                 er_m_num = 3
                 er_m_tex = 'Bạn chưa nhập Email hoặc Email không hợp lệ'
 
-            elif not (passw1.strip() and passw2.strip() and passw1.strip().__eq__(passw2.strip())):# kiểm tra xem mật khẩu được nhập chưa và mật khẩu có trùng nhau
+            elif not (passw1.strip() and passw2.strip() and passw1.strip().__eq__(
+                    passw2.strip())):  # kiểm tra xem mật khẩu được nhập chưa và mật khẩu có trùng nhau
                 er_m_num = 4
                 er_m_tex = 'Bạn chưa nhập Mật khẩu hoặc Mật khẩu không khớp'
             else:
@@ -146,6 +154,9 @@ def logup():
 
 
 
+# @app.route('/api/flight-routes')
+
+
 
 # ! Lỗi 'function' object has no attribute 'user_loader'
 # @login.user_loader
@@ -161,4 +172,3 @@ if __name__ == '__main__':
     from app.admin import *
 
     app.run(host='localhost', port=5000, debug=True)
-
