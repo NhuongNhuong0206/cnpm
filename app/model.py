@@ -55,7 +55,7 @@ class Flight_route(BaseModel):
     departure_airport_id = Column(Integer, ForeignKey(Airport.id))  # 3
     arrival_airport_id = Column(Integer, ForeignKey(Airport.id))  # 4
     name_flight_route = Column(String(50), nullable=False)
-
+    price = Column(Integer, nullable=False)
     ticket_id = relationship('Ticket', backref='flight_route', lazy=False)
     fl_route1 = relationship('Airport', foreign_keys=[departure_airport_id], backref='rule_departure_airport')  # 3
     fl_route2 = relationship('Airport', foreign_keys=[arrival_airport_id], backref='rule_name_flight')  # 4
@@ -234,9 +234,14 @@ if __name__ == '__main__':
         # db.session.add_all([loaive1, loaive2])
         # db.session.commit()
 
-        # tuyenBay1 = Flight_route(departure_airport_id=1, arrival_airport_id=3, name_flight_route='TanSonNhat-ConDao')
-        # tuyenBay2 = Flight_route(departure_airport_id=7, arrival_airport_id=5, name_flight_route='VanDon-CanTho')
-        # db.session.add_all([tuyenBay1, tuyenBay2])
+        # tuyenBay1 = Flight_route(departure_airport_id=1, arrival_airport_id=3, name_flight_route='TanSonNhat-ConDao', price = 200000)
+        # tuyenBay2 = Flight_route(departure_airport_id=7, arrival_airport_id=5, name_flight_route='VanDon-CanTho', price = 700000)
+        # tuyenBay3 = Flight_route(departure_airport_id=3, arrival_airport_id=6, name_flight_route='ConDao-PhuBai', price=800000)
+        # tuyenBay4 = Flight_route(departure_airport_id=7, arrival_airport_id=4, name_flight_route='VanDon-CaMau', price = 600000)
+        # tuyenBay5 = Flight_route(departure_airport_id=1, arrival_airport_id=5, name_flight_route='TanSonNhat-CanTho', price = 300000)
+        # tuyenBay6 = Flight_route(departure_airport_id=7, arrival_airport_id=4, name_flight_route='VanDon-CaMau', price = 530000)
+        # tuyenBay7 = Flight_route(departure_airport_id=2, arrival_airport_id=3, name_flight_route='NoiBai-ConDao', price = 4900000)
+        # db.session.add_all([tuyenBay1, tuyenBay2, tuyenBay3, tuyenBay4, tuyenBay5, tuyenBay6, tuyenBay7])
         # db.session.commit()
 
         # t1 = Ticket(bill_id=1, tick_type_id=1, status=True, flightRouter_id=3)
@@ -245,7 +250,7 @@ if __name__ == '__main__':
         # t4 = Ticket(bill_id=4, tick_type_id=1, status=False, flightRouter_id=4)
         # t5 = Ticket(bill_id=5, tick_type_id=2, status=True, flightRouter_id=5)
         # t7 = Ticket(bill_id=6, tick_type_id=2, status=True, flightRouter_id=4)
-        # db.session.add_all([t1, t2, t3, t4, t5, t6, t7])
+        # db.session.add_all([t1, t2, t3, t4, t5, t7])
         # db.session.commit()
 
 

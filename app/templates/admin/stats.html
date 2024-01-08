@@ -34,9 +34,9 @@
     <div class="col-md-5 col-xs-12">
         <table class="table">
             <tr>
-                <th>Hạn Thường</th>
-                 <th>Hạn thương gia</th>
-                <th>Tháng</th>
+                <th>Truyến bay</th>
+                 <th>Tháng</th>
+                <th>Tổng tiền</th>
 
             </tr>
 
@@ -52,14 +52,13 @@
   let data=[];
   let labels=[];
 
-  let mData=[];
-  let mLabels=[];
+  let mData=[0,30,40,14,25];
+  let mLabels=['s1','s2','s3','s4','s5'];
 
-  {% for s in stats %}
-  data.push({{s[2]}})
-  labels.push('{{s[1]}}')
+  {% for s in mon_stats %}
+  mData.push({{s[1]}})
+  mLabels.push({{s[0]}})
   {% endfor %}
-
 
   window.onload = function() {
     const ctx2 = document.getElementById('myChart2');
@@ -111,5 +110,15 @@
                 break;
         }
     }
+
+    function getData(selectedValue ) {
+      fetch(`/revenue-mon-stats/${selectedValue}`, { method: 'GET' })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data); // Dữ liệu được trả về từ server
+                // Xử lý dữ liệu (nếu cần)
+            })
+            .catch(error => console.error('Error:', error));
+}
 </script>
 {% endblock %}

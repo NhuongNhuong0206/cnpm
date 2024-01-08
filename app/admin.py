@@ -75,7 +75,7 @@ class RulesView(BaseView):
 class AdminStartView(BaseView):
     @expose('/') # trả về môt mẫu HTML
     def index(self):
-        return self.render('admin/stats.html',mon_stats=dao.revenue_mon_stats(1,4))
+        return self.render('admin/stats.html', sats=dao.revenue_mon_stats(1))
 
     # def is_accessible(self):
     #     print(current_user.user_role)

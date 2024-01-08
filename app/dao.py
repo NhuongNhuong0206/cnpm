@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import func
+from sqlalchemy import func, and_
 
 from app.model import Flight_regulations, User, Number_of_seats, Bill, Flight, Ticket, Flight_schedule, \
     Flight_route, Ticket_type, Bill, Airport
@@ -83,10 +83,7 @@ def get_data_stats():
     return q.all()
 
 
-
-
-#Thống kê
-def revenue_mon_stats(dayf, days):
+def month_router(val):
     start_date = '2024-01-01 00:00:00' # dữ liệu ngày bắt đầu trong tháng (dayf)
     end_date = '2024-01-31 00:00:00' # Dữ liệu ngày kết thúc trong tháng (days)
     start_datetime = datetime.strptime(start_date, '%Y-%m-%d %H:%M:%S')# định dạng lại DateTime
@@ -96,29 +93,82 @@ def revenue_mon_stats(dayf, days):
     ticket = db.session.query(Ticket).all() # all vé
     bill = db.session.query(Bill).all() # all hóa đơn
     sum = 0
+    list_sum = []
+    route_list = []
+    routes = db.session.query(Flight_route).all()
+    airport_list = db.session.query(Airport).all()
 
 # Lấy danh sách các vé trong khoảng thời gian từ start_date đến end_date
 # Lấy dữ liệu trong bảng Ticket. Join ticket và bill. Điều kiện date_and_time trong khoảng start_day -> end_day
     ticket_date_date = (db.session.query(Ticket)
     .join(Bill, Ticket.bill_id == Bill.id)
-    .filter(Bill.date_and_time.between(start_datetime, end_datetime))
+    .join(Flight_route, Ticket.flightRouter_id == Flight_route.id)
+    .filter(
+        Bill.date_and_time.between(start_datetime, end_datetime)
+
+    )
     .all()
     )
     print(ticket_date_date)
+    return ticket_date_date
+
+
+# Thống kê
+def revenue_mon_stats(val):
+    start_date = '2024-01-01 00:00:00' # dữ liệu ngày bắt đầu trong tháng (dayf)
+    end_date = '2024-01-31 00:00:00' # Dữ liệu ngày kết thúc trong tháng (days)
+    start_datetime = datetime.strptime(start_date, '%Y-%m-%d %H:%M:%S')# định dạng lại DateTime
+    end_datetime = datetime.strptime(end_date, '%Y-%m-%d %H:%M:%S')#Định dạng lại DateTime
+
+    ticket_types = db.session.query(Ticket_type).all()  # Lấy danh sách dữ liệu tất cả các loại vé
+    ticket = db.session.query(Ticket).all() # all vé
+    bill = db.session.query(Bill).all() # all hóa đơn
+    sum = 0
+    list_sum = []
+    route_list = []
+    routes = db.session.query(Flight_route).all()
+    airport_list = db.session.query(Airport).all()
+
+# # Lấy danh sách các vé trong khoảng thời gian từ start_date đến end_date
+# # Lấy dữ liệu trong bảng Ticket. Join ticket và bill. Điều kiện date_and_time trong khoảng start_day -> end_day
+#     ticket_date_date = (db.session.query(Ticket)
+#     .join(Bill, Ticket.bill_id == Bill.id)
+#     .join(Flight_route, Ticket.flightRouter_id == Flight_route.id)
+#     .filter(
+#         Bill.date_and_time.between(start_datetime, end_datetime)
+#
+#     )
+#     .all()
+#     )
+#     print(ticket_date_date)
+    ticket_date_date = month_router(1)
+    print(ticket_date_date)
+
+
+
+    for r in routes:  # trả về danh sách tuyến bay dưới dạng JSON
+        deprature = airport_list[r.departure_airport_id - 1].name
+        # print(deprature)
+        arrival = airport_list[r.arrival_airport_id - 1].name
+        # print(arrival)
+        route_list += [{'id': r.id, 'name': deprature + ' - ' + arrival}]
+    # print(route_list)
 
 #danh sách các vé theo từng loại vé
     # print(len(ticket_types))
     for tk in ticket_date_date:#tk chạy trong ticket_date_date đã tính ở trên
-        print(ticket_date_date[tk.tick_type_id - 1].status)
+        # print(ticket_date_date[tk.tick_type_id - 1].status)
         if ticket_date_date[tk.tick_type_id - 1].status == True:# nếu phần tử ticket_date_date thứ tk.tick_type_id - 1 đã được bán thì cộng giá vé vào tổng
-            print(tk.tick_type_id)
+            # print(tk.tick_type_id)
             sum = sum + ticket_types[tk.tick_type_id - 1].fare_value
     print(sum)
+
+
 
     return sum
 
 
-
+# xuất ra tên các tuyến bay
 def get_flight_routes():
     route_list = []
     routes = db.session.query(Flight_route).all()
@@ -126,11 +176,10 @@ def get_flight_routes():
 
     for r in routes:# trả về danh sách tuyến bay dưới dạng JSON
         deprature = airport_list[r.departure_airport_id - 1].name
-        print(deprature)
+
         arrival = airport_list[r.arrival_airport_id - 1].name
-        print(arrival)
+
         route_list += [{'id': r.id, 'name': deprature + ' - ' + arrival}]
-    print(route_list)
     return jsonify(route_list)
 
 
