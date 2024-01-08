@@ -1,6 +1,6 @@
-from flask import session
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, Enum, Boolean, DateTime
 
+from flask import session
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, Enum, Boolean, DateTime,Date, PrimaryKeyConstraint
 from sqlalchemy.orm import relationship, backref
 from app import db, app, login_manager
 from flask_login import UserMixin
@@ -19,8 +19,17 @@ class BaseModel(db.Model):
 class UserRoleEnum(enum.Enum):
     USER = 1
     ADMIN = 2
+    STAFF = 3
 
 
+
+
+class Staff(BaseModel):
+    name = Column(String(20), nullable=False)
+
+
+
+#Bảng khách hàng : Thông tin khách hàng đã được lưu chung với user
 class User(BaseModel, UserMixin):
     name = Column(String(50), nullable=False)
     passw1 = Column(String(100))
@@ -32,7 +41,7 @@ class User(BaseModel, UserMixin):
     identification = Column(String(20), unique=True, nullable=True)
     email = Column(String(50), nullable=False)
     nationality = Column(String(50))
-    birthdate = Column(DateTime)
+    birthdate = Column(Date)
     # phone_number = Column(Integer)
 
     def __str__(self):
@@ -48,67 +57,96 @@ class Airport(BaseModel):
     def __str__(self):
         return self.name
 
-
-    # Bảng Tuyến bay
 class Flight_route(BaseModel):
     __tablename__ = 'flight_route'
     departure_airport_id = Column(Integer, ForeignKey(Airport.id))  # 3
     arrival_airport_id = Column(Integer, ForeignKey(Airport.id))  # 4
+    bw_airport_id = Column(Integer, ForeignKey(Airport.id))
     name_flight_route = Column(String(50), nullable=False)
     price = Column(Integer, nullable=False)
     ticket_id = relationship('Ticket', backref='flight_route', lazy=False)
     fl_route1 = relationship('Airport', foreign_keys=[departure_airport_id], backref='rule_departure_airport')  # 3
-    fl_route2 = relationship('Airport', foreign_keys=[arrival_airport_id], backref='rule_name_flight')  # 4
+    fl_route2 = relationship('Airport', foreign_keys=[arrival_airport_id], backref='rule_name_flight')  # 3 # 4
+    fl_route3 = relationship('Airport', foreign_keys=[bw_airport_id], backref='rule_name_flight_3')
 
     def __str__(self):
-        return self.name
-
+        return self.name_flight_route
 
 # Bảng qui định chuyến bay
 class Flight_regulations(BaseModel):
     __tablename__ = 'flight_regulations'
     # id = Column(Integer, primary_key=True, autoincrement=True)
-    min_onl_ticket_booking_time = Column(Integer, nullable=False)
-    min_ticket_sale_time = Column(Integer, nullable=False)
-    min_flight_time = Column(Integer, nullable=False)
-    minimum_downtime = Column(Integer, nullable=False, default=30)
-    maximum_downtime = Column(Integer, nullable=False, default=20)
-    fli = relationship('Flight', backref='flight_regulations', lazy=False)  # 2
-
+    min_onl_ticket_booking_time = Column(Integer, nullable=False)#thời gian mua vé onl tối thiểu
+    min_ticket_sale_time = Column(Integer, nullable=False)#thời gian bán vé tối thiểu
+    min_flight_time = Column(Integer, nullable=False)#thời gian bay tối thiểu
+    minimum_downtime = Column(Integer, nullable=False, default=30)#thời gian dừng tối thiểu
+    maximum_downtime = Column(Integer, nullable=False, default=20)#thời gian dừng tối da
+    current_date = Column(Date)
     def __str__(self):
-        return self.name
+        return self.min_onl_ticket_booking_time
 
 
 # Bảng chuyen bay
 class Flight(BaseModel):
     __tablename__ = 'flight'
+
+    # id = Column(Integer, primary_key=True, autoincrement=True)
     flight_regulations_id = Column(Integer, ForeignKey(Flight_regulations.id))  # 2
     name_flight = Column(String(50), nullable=False)
     number_empty_seats = Column(Integer, nullable=False)
     number_empty_books = Column(Integer, nullable=False)  # Thuộc tính suy diễn !
-
-
-    is_active = Column(Boolean, nullable=False)
-    is_deleted = Column(Boolean,nullable=False)
+    
+     active = Column(Boolean, default=True)
+    deleted = Column(Boolean, default=False)
     number_seats = relationship('Number_of_seats', backref='flight', lazy=False)
 
+    # number_flight = relationship('Flight_Flight_schedule', backref='flight', lazy=False)
+    def __str__(self):
+        return self.Flight
 
-
-
+    
+   
+   
 #Bảng lich bay
 class Flight_schedule(BaseModel):
     __tablename__ = 'flight_schedule'
     # id = Column(Integer, primary_key=True, autoincrement=True)
-    departure_time = Column(DateTime, nullable=False)
-    arrival_time = Column(DateTime, nullable=False)
+    departure_time = Column(DateTime) #, nullable=False
+    arrival_time = Column(DateTime) #, nullable=False
     note = Column(String(50))
 
+    # number_schedule = relationship('Flight_Flight_schedule', backref='flight_schedule', lazy=False)
+
     def __str__(self):
-        return self.name
+        return self.note
 
 
+class Flight_Flight_schedule(db.Model):
+    flight_id = Column(Integer, ForeignKey(Flight.id), primary_key=True)
+    flight_schedule_id = Column(Integer, ForeignKey(Flight_schedule.id), primary_key=True)
 
+    flight = relationship('Flight', backref='flight_flight_schedules')
+    flight_schedule = relationship('Flight_schedule', backref='flight_flight_schedules')
 
+    __table_args__ = (
+        PrimaryKeyConstraint('flight_id', 'flight_schedule_id'),
+    )
+
+    def __str__(self):
+        return self.Flight_Flight_schedule
+      
+     
+class Flight_route_Flight(db.Model):
+    flight_id = Column(Integer, ForeignKey(Flight.id), primary_key=True)
+    flight_route_id = Column(Integer, ForeignKey(Flight_route.id), primary_key=True)
+
+    flight = relationship('Flight', backref='flight_flight_route')
+    flight_route = relationship('Flight_route', backref='flight_flight_route')
+
+    __table_args__ = (
+        PrimaryKeyConstraint('flight_id', 'flight_route_id'),
+    )
+    
 class Flight_Flight_schedule(db.Model):
     __tablename__ = 'Flight_Flight_schedule'
     flight_id = Column(Integer, ForeignKey(Flight.id), primary_key=True)
@@ -124,6 +162,9 @@ class Seat_class(BaseModel):
     # id = Column(Integer, primary_key=True, autoincrement=True)
     seat_class_name = Column(String(20), nullable=False)
     number_seats = relationship('Number_of_seats', backref='seat_class', lazy=False)
+    
+    def __str__(self):
+        return self.seat_class_name
 
 
 #Bảng số lượng ghế
@@ -134,8 +175,8 @@ class Number_of_seats(BaseModel):
     flight_id = Column(Integer, ForeignKey(Flight.id))
     num = Column(Integer)
     def __str__(self):
-        return self.name
-
+        return self.Number_of_seats
+      
 
 #Bảng Hóa đơn
 class Bill(BaseModel):
@@ -144,19 +185,11 @@ class Bill(BaseModel):
     date_and_time = Column(DateTime, nullable=False)
     Payment_code = Column(String(200), nullable=False)
     ticketb = relationship('Ticket', backref='Bill', lazy=False)
+    
+    def __str__(self):
+        return self.Bill
 
 
-#Bảng nhân viên
-class Staff(BaseModel):
-    name = Column(String(20), nullable=False)
-
-
-#Bảng nhân viên quản lý kế thừa bảng nhân viên
-class management_staff(Staff):
-    management_department = Column(String(30), nullable=False)
-
-
-#Bảng khách hàng : Thông tin khách hàng đã được lưu chung với user
 
 
 #Bảng Loại hành lý
@@ -164,13 +197,26 @@ class type_luggage(BaseModel):
     name = Column(String(20), nullable=False)
     weight_max = Column(Integer, nullable=False)
 
-#Bảng Loaị vé
+    def __str__(self):
+        return self.type_luggage
+      
+ 
+# Bảng nhân viên quản lý kế thừa bảng nhân viên
+class management_staff(Staff):
+    management_department = Column(String(30), nullable=False)
+    def __str__(self):
+        return self.management_staff
+
+    
+    # Bảng Loaị vé
 class Ticket_type(BaseModel):
     __tablename__ = 'ticket_type'
     name_Ticket_type = Column(String(60), nullable=False)
-    tickett = relationship('Ticket', backref ='ticket_type', lazy=False)
-    fare_value = Column(Integer, nullable=False)# giá ve
+    fare_value = Column(Integer, nullable=False)
+    tickett = relationship('Ticket', backref='ticket_type', lazy=False)
 
+    def __str__(self):
+        return self.Ticket_type
 
 #Bảng Vé
 class Ticket(BaseModel):
@@ -180,6 +226,18 @@ class Ticket(BaseModel):
     tick_type_id = Column(Integer, ForeignKey(Ticket_type.id))#id loại vé
     flightRouter_id = Column(Integer, ForeignKey(Flight_route.id))  # id tuyến bay
     status = Column(Boolean, nullable=False)
+    def __str__(self):
+        return self.Ticket
+      
+#########################################################
+# Viết bên index nó không hiểu. Phải viết qua model nó mới hiểu
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+# @login.user_loader
+# def load_user(user_id):
+#     return dao.get_user_by_id(user_id)
 
 
 
@@ -192,10 +250,13 @@ class Ticket(BaseModel):
 if __name__ == '__main__':
     with app.app_context():
 
+
         db.create_all()
 
+      
+
         # import hashlib
-        # u = User(name='admin',
+        # u = User(name='admin1',
         #          passw1=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()),
         #          user_role=UserRoleEnum.ADMIN,
         #          address='Tp.HoChiMinhcity',
@@ -204,7 +265,9 @@ if __name__ == '__main__':
         #          nationality='VietNam' )
         # db.session.add(u)
 
-        # a1 = Airport(name="Tân Sơn Nhất")
+
+     
+        # a1 = Airport(name='Tân Sơn Nhất')
         # a2 = Airport(name="Nội Bài")
         # a3 = Airport(name="Côn Đảo")
         # a4 = Airport(name="Cà Mau")
@@ -214,11 +277,18 @@ if __name__ == '__main__':
         # a8 = Airport(name="Đà Nẵng")
         # a9 = Airport(name="Phú Quốc")
         # a10 = Airport(name="Vinh")
-        #
+        
+       
+       
         # db.session.add_all([a1, a2, a3, a4, a5, a6, a7, a8, a9, a10])
         # db.session.commit()
+        
+         # fr = Flight_regulations(min_onl_ticket_booking_time=30, min_ticket_sale_time=20, min_flight_time=40,
+        #                    minimum_downtime=50, maximum_downtime=60)
+        # db.session.add(fr)
+        # db.session.commit()
 
-
+       
         # định dạng năm-tháng-ngày giờ-phút-giây
         # hoadon1 = Bill( date_and_time='2024-01-08 00:00:00', Payment_code='adadadasds')
         # hoadon2 = Bill( date_and_time='2024-01-16 00:00:00', Payment_code='adadadasds')
@@ -254,21 +324,41 @@ if __name__ == '__main__':
         # db.session.commit()
 
 
-        # fl = Flight(name_flight='QuangNgai-DaNnang', number_empty_seats=30,
-        #             number_empty_books=10, is_active=True, is_deleted=False)
-        # db.session.add(fl)
-        # db.session.commit()
-
-        # fr = Flight_regulations(min_onl_ticket_booking_time=30, min_ticket_sale_time=20, min_flight_time=40,
-        #                    minimum_downtime=50, maximum_downtime=60)
-        # db.session.add(fr)
-        # db.session.commit()
-
         # x = type_luggage(name='xach tay', weight_max=3)
         # db.session.add(x)
         # db.session.commit()
-        # #
-        # pass
-
-
+        
+        # b1=Flight(name_flight="chuyến 1",number_empty_seats=20,number_empty_books=15,active=1,deleted=0)
+        # b2=Flight(name_flight="chuyến 2",number_empty_seats=15,number_empty_books=25,active=1,deleted=0)
+        # b3=Flight(name_flight="chuyến 3",number_empty_seats=19,number_empty_books=16,active=1,deleted=0)
+        # db.session.add_all([b1, b2, b3])
+        # db.session.commit()
+    
+        # d1 = Flight_schedule(departure_time="2024-01-20 16:30:00", arrival_time="2024-01-20 18:30:00")
+        # d2 = Flight_schedule(departure_time="2024-01-21 16:30:00", arrival_time="2024-01-21 18:30:00")
+        # d3 = Flight_schedule(departure_time="2024-01-22 16:30:00", arrival_time="2024-01-22 18:30:00")
+        # db.session.add_all([d1, d2, d3])
+        # db.session.commit()
+    
+        # c1 = Flight_route_Flight(flight_id=1,flight_route_id=2)
+        # c2 = Flight_route_Flight(flight_id=2, flight_route_id=3)
+        # c3 = Flight_route_Flight(flight_id=3, flight_route_id=4)
+        # db.session.add_all([c1, c2, c3])
+        # db.session.commit()
+    
+   
+    
+        # e1=Flight_Flight_schedule(flight_id=1,flight_schedule_id=1)
+        # e2=Flight_Flight_schedule(flight_id=1,flight_schedule_id=2)
+        # e3=Flight_Flight_schedule(flight_id=2, flight_schedule_id=2)
+        # db.session.add_all([e1, e2, e3])
+        # db.session.commit()
+   
+    
+      
+        # g1= Seat_class(seat_class_name='Hạng thương gia')
+        # g2 = Seat_class(seat_class_name='Hạng thường')
+        # db.session.add_all([g1, g2])
+        # db.session.commit()
+        pass
 
