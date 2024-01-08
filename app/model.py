@@ -338,17 +338,17 @@ if __name__ == '__main__':
 
 
 
-        e1=Flight_Flight_schedule(flight_id=1,flight_schedule_id=1)
-        e2=Flight_Flight_schedule(flight_id=1,flight_schedule_id=2)
-        e3=Flight_Flight_schedule(flight_id=2, flight_schedule_id=2)
-        db.session.add_all([e1, e2, e3])
-        db.session.commit()
+        # e1=Flight_Flight_schedule(flight_id=1,flight_schedule_id=1)
+        # e2=Flight_Flight_schedule(flight_id=1,flight_schedule_id=2)
+        # e3=Flight_Flight_schedule(flight_id=2, flight_schedule_id=2)
+        # db.session.add_all([e1, e2, e3])
+        # db.session.commit()
 
 
-
-        g1= Seat_class(seat_class_name='Hạng thương gia')
-        g2 = Seat_class(seat_class_name='Hạng thường')
-        db.session.add_all([g1, g2])
-        db.session.commit()
-        pass
+        #
+        # g1= Seat_class(seat_class_name='Hạng thương gia')
+        # g2 = Seat_class(seat_class_name='Hạng thường')
+        # db.session.add_all([g1, g2])
+        # db.session.commit()
+        # pass
 
