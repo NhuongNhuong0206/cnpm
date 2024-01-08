@@ -257,7 +257,6 @@ if __name__ == '__main__':
         # db.session.add(u)
         # db.session.commit()
         # db.create_all()
-
         # #
         # #
         # a1 = Airport(name='Tan Son Nhat')
