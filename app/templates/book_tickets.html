@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Thông Tin Cá Nhân</title>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2>NHẬP THÔNG TIN CÁ NHÂN ĐỂ ĐẶT VÉ VÀ THANH TOÁN</h2>
+    <form>
+        <div class="form-group">
+            <label for="fullName">Họ Tên:</label>
+            <input type="text" class="form-control" id="fullName" placeholder="Nhập họ tên" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" class="form-control" id="email" placeholder="Nhập email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required>
+            <small class="text-muted">Vui lòng nhập đúng định dạng email.</small>
+        </div>
+        <div class="form-group">
+            <label for="address">Địa Chỉ:</label>
+            <input type="text" class="form-control" id="address" placeholder="Nhập địa chỉ" required>
+        </div>
+        <div class="form-group">
+            <label for="phone">Số Điện Thoại:</label>
+            <input type="tel" class="form-control" id="phone" placeholder="Nhập số điện thoại" pattern="\d+" required>
+            <small class="text-muted">Chỉ được nhập số.</small>
+        </div>
+        <div class="form-group">
+            <label for="dob">Ngày Sinh:</label>
+            <input type="date" class="form-control" id="dob" max="{{ current_date }}" required>
+            <small class="text-muted">Phải là ngày trong quá khứ.</small>
+        </div>
+        <div class="form-group">
+            <label for="idCard">Căn Cước:</label>
+            <input type="text" class="form-control" id="idCard" placeholder="Nhập số căn cước" pattern="\d+" required>
+            <small class="text-muted">Chỉ được nhập số.</small>
+        </div>
+        <div class="form-group">
+            <label for="nationality">Quốc Tịch:</label>
+            <input type="text" class="form-control" id="nationality" placeholder="Nhập quốc tịch" required>
+        </div>
+        <div class="form-group">
+            <label for="expiryDate">Ngày Hết Hạn:</label>
+            <input type="date" class="form-control" id="expiryDate" min="{{ current_date }}" required>
+            <small class="text-muted">Chỉ được là ngày từ hiện tại đến tương lai.</small>
+        </div>
+        <div class="form-group">
+            <label for="cardNumber">Số Thẻ:</label>
+            <input type="text" class="form-control" id="cardNumber" placeholder="Nhập số thẻ" pattern="\d+" required>
+            <small class="text-muted">Chỉ được nhập số.</small>
+        </div>
+        <div class="form-group">
+            <label for="cvv">Mã Số CVV:</label>
+            <input type="text" class="form-control" id="cvv" placeholder="Nhập mã số CVV" pattern="\d{3}" required>
+            <small class="text-muted">Chỉ được nhập số và có đúng 3 kí tự.</small>
+        </div>
+        <button type="submit" class="btn btn-success ml-2" onclick="validateInputs()">Thanh Toán</button>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+

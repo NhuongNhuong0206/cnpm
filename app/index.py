@@ -145,6 +145,23 @@ def logup():
     return render_template('signUp.html', er_m_num=er_m_num, er_m_tex=er_m_tex, er_m=er_m, er=er)
 
 
+@app.route('/book_ticket', methods=['get', 'post'])
+def book_ticket():
+    if request.method == 'POST':
+        # Lấy dữ liệu từ các trường input
+        full_name = request.form.get('fullName')
+        email = request.form.get('email')
+        address = request.form.get('address')
+        phone = request.form.get('phone')
+        dob = request.form.get('dob')
+        id_card = request.form.get('idCard')
+        nationality = request.form.get('nationality')
+        expiry_date = request.form.get('expiryDate')
+        card_number = request.form.get('cardNumber')
+        cvv = request.form.get('cvv')
+
+    return render_template('book_tickets.html', current_date=datetime.now().strftime('%Y-%m-%d'))
+
 
 
 # ! Lỗi 'function' object has no attribute 'user_loader'
