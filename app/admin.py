@@ -1,6 +1,6 @@
 from flask import redirect, session, request, render_template, url_for
 from flask_admin.contrib.sqla import ModelView
-from app import app, db, dao, login_manager, util
+from app import app, db, dao, login_manager,util
 from flask_admin import Admin, BaseView, expose, AdminIndexView
 from datetime import datetime
 
@@ -50,7 +50,7 @@ class LogoutView(BaseView):
     def index(self):
         logout_user()
         session.clear()
-        return redirect('/admin')
+        return redirect('/')
 
     def ís_accessible(self):
          return current_user.is_authenticated
@@ -74,11 +74,20 @@ class Flight_routerView(AuthenticatedAdmin):
       
 # Báo cáo thống kê
 class AdminStartView(BaseView):
-    @expose("/")
-    def router(self):
-        return self.render('admin/stats.html')
+    @expose('/') # trả về môt mẫu HTML
+    def index(self):
+        return self.render('admin/stats.html', sats=dao.revenue_mon_stats(1))
+
+    # def is_accessible(self):
+    #     print(current_user.user_role)
+    #     return current_user.is_authenticated and current_user.user_role == UserRoleEnum.ADMIN
 
 
+
+class ChangTicketView(BaseView):
+    @expose('/') # trả về môt mẫu HTML
+    def index(self):
+        return self.render('admin/changeTicket.html')
 
 class AuthenticatedStaff(ModelView): # kiểm tra xem có phải nhân viên không
     def is_accessible(self):
@@ -176,6 +185,12 @@ admin.add_view(AirportView(Airport, db.session, name="SÂN BAY"))
 admin.add_view(Flight_routerView(Flight_route, db.session, name="TUYẾN BAY"))
 admin.add_view(AdminStartView(name='Báo cáo thống kê'))
 # admin.add_view(RulesView(name='Lập quy đinh'))
+admin.add_view(ChangTicketView(name='Đổi vé'))
 admin.add_view(FlightScheView(Flight, db.session, name='Lịch chuyến bay'))
 admin.add_view(regulationsView(name='Lập quy định'))
 admin.add_view(LogoutView(name='Đăng xuất'))
+
+
+
+
+

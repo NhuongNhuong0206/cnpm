@@ -1,8 +1,11 @@
 import json, os
+
+from sqlalchemy import func
+
 from app import app, db, flow
 from flask import request
 from app.model import (User,UserRoleEnum, Flight_route, Airport,
-                       Flight_schedule, Flight, Flight_Flight_schedule, Flight_route_Flight, Number_of_seats, Flight_regulations)
+                       Flight_schedule, Flight, Flight_Flight_schedule, Flight_route_Flight, Number_of_seats, Flight_regulations,Ticket_type)
 import hashlib
 import re
 import google.auth.transport.requests
@@ -127,9 +130,15 @@ def get_user_oauth():
     )
     return user_oauth
 
+
+# def check_changTicket(idTicked):
+#     if idTicked:
+#         id_flight = Flight.query.filter_by(id=user_flight_code).first()
+
 #lưu quy định xuống databae
 def add_regulations(min_onl_ticket_booking_time, min_ticket_sale_time, min_flight_time, minimum_downtime, maximum_downtime, current_date):
     a = Flight_regulations(min_onl_ticket_booking_time=min_onl_ticket_booking_time, min_ticket_sale_time=min_ticket_sale_time, min_flight_time=min_flight_time, minimum_downtime=minimum_downtime, maximum_downtime=maximum_downtime, current_date=current_date)
     db.session.add(a)
     db.session.commit()
     return a
+

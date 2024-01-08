@@ -1,15 +1,24 @@
+
+
 from flask import render_template, request, redirect, jsonify, session, url_for
 from app import app, util, controllers, dao, login_manager, admin
 from validate_email import validate_email
 from datetime import datetime
 from flask_login import login_user, logout_user
-from app.model import UserRoleEnum
-from app.model import User, UserRoleEnum
 
-app.add_url_rule('/api/admin_rules', 'create_admin_rules', dao.create_admin_rules,
-                 methods=['post'])
+from app.model import UserRoleEnum, Flight, Ticket_type, Ticket, Bill,User
+
 app.add_url_rule('/api/user/confirm', 'confirm_user', controllers.confirm_user,
                  methods=['post'])
+
+app.add_url_rule('/admin/changeTickets', 'changeTickets', dao.changeTickets,
+                 methods=['post'])
+app.add_url_rule('/api/admin_rules', 'create_admin_rules', dao.create_admin_rules,
+                 methods=['post'])
+app.add_url_rule('/api/flight-routes', 'get_flight_routes', dao.get_flight_routes,
+                 methods=['get', 'post'])
+app.add_url_rule('/revenue-mon-stats/<selected_value>', dao.revenue_mon_stats,
+                 methods=['get'])
 
 app.add_url_rule('/oauth', 'login_oauth', controllers.login_oauth)
 app.add_url_rule('/callback', 'oauth_callback', controllers.oauth_callback)
@@ -52,6 +61,41 @@ def index():
 
 
 
+@app.route('/revenue-mon-stats/<selected_value>', methods=['GET'])
+def revenue_mon_stats(selected_value):
+    start_date = '2024-01-01 00:00:00'  # dữ liệu ngày bắt đầu trong tháng (dayf)
+    end_date = '2024-01-31 00:00:00'  # Dữ liệu ngày kết thúc trong tháng (days)
+    start_datetime = datetime.strptime(start_date, '%Y-%m-%d %H:%M:%S')  # định dạng lại DateTime
+    end_datetime = datetime.strptime(end_date, '%Y-%m-%d %H:%M:%S')  # Định dạng lại DateTime
+
+    ticket_types = db.session.query(Ticket_type).all()  # Lấy danh sách dữ liệu tất cả các loại vé
+    ticket = db.session.query(Ticket).all()  # all vé
+    bill = db.session.query(Bill).all()  # all hóa đơn
+    sum = 0
+
+    # Lấy danh sách các vé trong khoảng thời gian từ start_date đến end_date
+    # Lấy dữ liệu trong bảng Ticket. Join ticket và bill. Điều kiện date_and_time trong khoảng start_day -> end_day
+    ticket_date_date = (db.session.query(Ticket)
+                        .join(Bill, Ticket.bill_id == Bill.id)
+                        .filter(Bill.date_and_time.between(start_datetime, end_datetime))
+                        .all()
+                        )
+    print(ticket_date_date)
+
+    # danh sách các vé theo từng loại vé
+    # print(len(ticket_types))
+    for tk in ticket_date_date:  # tk chạy trong ticket_date_date đã tính ở trên
+        print(ticket_date_date[tk.tick_type_id - 1].status)
+        if ticket_date_date[
+            tk.tick_type_id - 1].status == True:  # nếu phần tử ticket_date_date thứ tk.tick_type_id - 1 đã được bán thì cộng giá vé vào tổng
+            print(tk.tick_type_id)
+            sum = sum + ticket_types[tk.tick_type_id - 1].fare_value
+    print(sum)
+
+    return sum
+
+
+
 # @app.route('/search_flights', methods=['POST'])
 # def search_flights():
 
@@ -72,6 +116,7 @@ def fight_list():
 def ticket():
     # Thực hiện các thao tác cần thiết và trả về template ticket.html
     return render_template('ticket.html')
+
 
 # @app.route('/flight')
 # def index():
@@ -109,6 +154,7 @@ def singin_admin():
     if user_1:
         login_user(user=user_1)
     return redirect('/admin')
+
 
 @app.route('/log-out')
 def logOut():
@@ -212,7 +258,22 @@ def book_ticket():
         card_number = request.form.get('cardNumber')
         cvv = request.form.get('cvv')
 
+
+# @app.route('/api/flight-routes')
+
+
+
+# ! Lỗi 'function' object has no attribute 'user_loader'
+# @login.user_loader
+# def load_user(user_id):
+#     return User.query.get(int(user_id))
+
+# @login_manager.user_loader
+# def load_user(user_id):
+#     return User.query.get(int(user_id))
+=======
     return render_template('book_tickets.html', current_date=datetime.now().strftime('%Y-%m-%d'))
+
 
 
 if __name__ == '__main__':

@@ -1,0 +1,53 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+<body>
+<h2 class="text-center text-info" style="margin-top: 40px">ĐỔI VÉ BAY</h2>
+
+<form method="POST" action="/admin/changeTickets" class="w-60 my-auto p-5 bg-white shadow-lg rounded-1 "
+      id="Formchange">
+    <div class="row">
+        <label class="visually-hidden " for="ma_chuyen_bay">Nhập mã chuyến bay</label>
+        <div class="input-group">
+            <div class="input-group-text">#</div>
+            <input type="text" class="form-control " id="ma_chuyen_bay" name='ma_chuyen_bay'>
+        </div>
+    </div>
+    <div class="text-center">
+        <button style="width: 280px; display: none; margin: auto;" type="submit" id="submit" class="btn btn-primary mt-4 text-center"
+            onclick="fetchFlight()">Tra cứu
+        </button>
+    </div>
+</form>
+
+
+<script>
+    function fetchFlight() {
+      // Sử dụng fetch API  yêu cầu đến máy chủ
+      fetch('/admin/changeTickets', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 'ma_chuyen_bay': ma_chuyen_bay }),
+      })
+
+    }
+
+    //Ẩn hiện nút button
+    // Lấy thẻ input và nút button
+    const inputData = document.getElementById('ma_chuyen_bay');
+    const submitButton = document.getElementById('submit');
+    // Thêm sự kiện 'input' cho trường input
+    inputData.addEventListener('input', function() {
+        // Kiểm tra nếu trường input có dữ liệu thì hiển thị nút button, không có thì tiếp tục ẩn nút button
+        if (inputData.value.trim() !== '') {
+            submitButton.style.display = 'block';
+        } else {
+            submitButton.style.display = 'none';
+        }
+    });
+
+
+</script>
+</body>
+{% endblock %}

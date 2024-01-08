@@ -21,7 +21,6 @@ def confirm_user():
     }
 
 # Kiem tra xem các trường có thông tin hay không. Nếu None thì return.... còn khác None thif return ....
-
 def create_admin_rules():
     data = request.get_json() # gán dữ liệu được lấy từ phần body của một HTML request cho data
     ar = dao.Flight_regulations(min_onl_ticket_booking_time=data['min_onl_ticket_booking_time'],
