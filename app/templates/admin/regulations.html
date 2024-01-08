@@ -1,0 +1,96 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+<body>
+
+<div class="container mt-5">
+    <h2>Thiết lập quy định</h2>
+   <form method="post" id="settingsForm" onsubmit="return validateAndShowConfirmation()">
+    <div class="form-group">
+        <label for="bookingTime">Thời gian đặt vé tối thiểu(phút):</label>
+        <input type="number" class="form-control" id="bookingTime" name="bookingTime" min="0" max="60" required>
+    </div>
+    <div class="form-group">
+        <label for="sellingTime">Thời gian bán vé tối thiểu(phút):</label>
+        <input type="number" class="form-control" id="sellingTime" name="sellingTime" min="0" max="60" required>
+    </div>
+    <div class="form-group">
+        <label for="flightTime">Thời gian bay tối thiểu(phút):</label>
+        <input type="number" class="form-control" id="flightTime" name="flightTime" min="0" max="60" required>
+    </div>
+    <div class="form-group">
+        <label for="minStopTime">Thời gian dừng tối thiểu(phút):</label>
+        <input type="number" class="form-control" id="minStopTime" name="minStopTime" min="0" max="60" required>
+    </div>
+    <div class="form-group">
+        <label for="maxStopTime">Thời gian dừng tối đa(phút):</label>
+        <input type="number" class="form-control" id="maxStopTime" name="maxStopTime" min="0" max="60" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Xong</button>
+       <!-- Bảng hiển thị dữ liệu -->
+    <h3 class="mt-4">Quy định hiện tại</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Thời gian đặt vé tối thiểu(phút)</th>
+                <th scope="col">Thời gian bán vé tối thiểu(phút)</th>
+                <th scope="col">Thời gian bay tối thiểu(phút)</th>
+                <th scope="col">Thời gian dừng tối thiểu(phút)</th>
+                <th scope="col">Thời gian dừng tối đa(phút)</th>
+                <th scope="col">Thời gian lập quy định</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+                    <th scope="col">{{a.min_onl_ticket_booking_time}}</th>
+                    <th scope="col">{{a.min_ticket_sale_time}}</th>
+                    <th scope="col">{{a.min_flight_time}}</th>
+                    <th scope="col">{{a.minimum_downtime}}</th>
+                    <th scope="col">{{a.maximum_downtime}}</th>
+                    <th scope="col">{{a.current_date}}</th>
+                </tr>
+        </tbody>
+    </table>
+</form>
+
+</div>
+
+<!-- Modal -->
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    function validateAndShowConfirmation() {
+        var bookingTime = document.getElementById('bookingTime').value;
+        var sellingTime = document.getElementById('sellingTime').value;
+        var flightTime = document.getElementById('flightTime').value;
+        var minStopTime = document.getElementById('minStopTime').value;
+        var maxStopTime = document.getElementById('maxStopTime').value;
+
+        if (validateInput(bookingTime) && validateInput(sellingTime) && validateInput(flightTime) && validateInput(minStopTime) && validateInput(maxStopTime)) {
+            showConfirmation();
+            return true;
+        } else {
+            alert('Vui lòng nhập số nguyên dương và không quá 60.');
+            return false;
+        }
+    }
+
+    function validateInput(value) {
+        // Kiểm tra xem value có phải là số nguyên dương và không quá 60 hay không
+        return /^\d+$/.test(value) && parseInt(value) > 0 && parseInt(value) <= 60;
+    }
+
+    function showConfirmation() {
+        $('#confirmationModal').modal('show');
+    }
+
+    function completeSettings() {
+        // Thực hiện các xử lý khác sau khi hoàn thành
+        $('#confirmationModal').modal('hide');
+    }
+</script>
+
+</body>
+{% endblock %}

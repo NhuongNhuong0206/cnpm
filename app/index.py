@@ -4,7 +4,6 @@ from validate_email import validate_email
 from datetime import datetime
 from flask_login import login_user, logout_user
 from app.model import UserRoleEnum
-
 from app.model import User, UserRoleEnum
 
 app.add_url_rule('/api/admin_rules', 'create_admin_rules', dao.create_admin_rules,
@@ -53,7 +52,6 @@ def index():
 
 
 
-
 # @app.route('/search_flights', methods=['POST'])
 # def search_flights():
 
@@ -74,7 +72,6 @@ def fight_list():
 def ticket():
     # Thực hiện các thao tác cần thiết và trả về template ticket.html
     return render_template('ticket.html')
-
 
 # @app.route('/flight')
 # def index():
@@ -112,7 +109,6 @@ def singin_admin():
     if user_1:
         login_user(user=user_1)
     return redirect('/admin')
-
 
 @app.route('/log-out')
 def logOut():
@@ -217,16 +213,6 @@ def book_ticket():
         cvv = request.form.get('cvv')
 
     return render_template('book_tickets.html', current_date=datetime.now().strftime('%Y-%m-%d'))
-
-
-# ! Lỗi 'function' object has no attribute 'user_loader'
-# @login.user_loader
-# def load_user(user_id):
-#     return User.query.get(int(user_id))
-
-# @login_manager.user_loader
-# def load_user(user_id):
-#     return User.query.get(int(user_id))
 
 
 if __name__ == '__main__':

@@ -3,7 +3,7 @@ from app import dao
 from flask_login import current_user, login_user, logout_user
 from datetime import datetime
 from validate_email import validate_email
-from app import app, util, login_manager, controllers, db
+from app import app, util, login_manager, controllers, flow, db
 from app.model import User, UserRoleEnum
 
 

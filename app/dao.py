@@ -92,6 +92,7 @@ def lay_chuyen_bay_ung_voi_lich_bay(list_flight_sche):
 def get_Number_of_seats():
     return Number_of_seats.query.filter().all()
 
+
 def query_flights(from_location, to_location, day_start, rank_chair):
     # Thực hiện xử lý truy vấn ở đây
     # Chú ý: Bạn cần điều chỉnh query dựa trên cấu trúc thực tế của cơ sở dữ liệu của bạn
@@ -161,9 +162,3 @@ def query_flights(from_location, to_location, day_start, rank_chair):
     #     })
     #
     # return result_flights
-
-
-def get_airport():
-    return Airport.query.filter().all()
-
-
