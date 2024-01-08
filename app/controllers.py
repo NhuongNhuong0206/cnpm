@@ -61,3 +61,23 @@ def oauth_callback():
         print("err", err)
         return render_template('homeAndFindFlights.html')
     return render_template('homeAndFindFlights.html')
+
+# def search_flight_schedule():
+#     data = request.get_json()
+#     try:
+#         inp_search = dao.get_inp_search_json(af_id=data['departure_airport_id'], at_id=data['arrival_airport_id'],
+#                                              time_start=data['time_start'], ticket_type=data['ticket_type'])
+#
+#         data_search = dao.search_flight_schedule(ap_from=data['departure_airport_id'], ap_to=data['arrival_airport_id'],
+#                                                  time_start=data['time_start'], ticket_type=data['ticket_type'])
+#         session['data_search'] = data_search
+#         session['inp_search'] = inp_search
+#     except:
+#         return {
+#             'status': 500,
+#             'data': 'error'
+#         }
+#     return {
+#         'status': 200,
+#         'data': data_search
+#     }

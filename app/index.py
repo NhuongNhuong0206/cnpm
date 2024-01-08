@@ -105,7 +105,7 @@ def fight_list():
     # Lấy dữ liệu từ session để hiển thị trên trang flightList.html
     data_search = session.get('data_search', [])
     inp_search = session.get('inp_search', {})
-    a = dao.get_airport()
+    a = dao.get_airport_list()
     print(a)
     print()
     # Render trang flightList.html với dữ liệu tìm kiếm
@@ -271,7 +271,7 @@ def book_ticket():
 # @login_manager.user_loader
 # def load_user(user_id):
 #     return User.query.get(int(user_id))
-=======
+
     return render_template('book_tickets.html', current_date=datetime.now().strftime('%Y-%m-%d'))
 
 
