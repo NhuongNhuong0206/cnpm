@@ -95,13 +95,8 @@ class Flight(BaseModel):
     # id = Column(Integer, primary_key=True, autoincrement=True)
     flight_regulations_id = Column(Integer, ForeignKey(Flight_regulations.id))  # 2
     number_empty_seats = Column(Integer, nullable=False)
-<<<<<<< Updated upstream
-    number_empty_books = Column(Integer, nullable=False)  # Thuộc tính suy diễn !
-
-=======
     number_empty_books = Column(Integer)  # Thuộc tính suy diễn !
     time_stop = Column(Integer)
->>>>>>> Stashed changes
     active = Column(Boolean, default=True)
     deleted = Column(Boolean, default=False)
     number_seats = relationship('Number_of_seats', backref='flight', lazy=False)
@@ -152,11 +147,7 @@ class Flight_route_Flight(db.Model):
     __table_args__ = (
         PrimaryKeyConstraint('flight_id', 'flight_route_id'),
     )
-<<<<<<< Updated upstream
 
-=======
-    
->>>>>>> Stashed changes
 # class Flight_Flight_schedule(db.Model):
 #     __tablename__ = 'Flight_Flight_schedule'
 #     flight_id = Column(Integer, ForeignKey(Flight.id), primary_key=True)
@@ -238,13 +229,8 @@ class Ticket(BaseModel):
     status = Column(Boolean, nullable=False)
     def __str__(self):
         return self.Ticket
-<<<<<<< Updated upstream
 
-#########################################################
-=======
       
-
->>>>>>> Stashed changes
 # Viết bên index nó không hiểu. Phải viết qua model nó mới hiểu
 @login_manager.user_loader
 def load_user(user_id):
@@ -253,15 +239,10 @@ def load_user(user_id):
 
 if __name__ == '__main__':
     with app.app_context():
-<<<<<<< Updated upstream
 
 
         db.create_all()
 
-
-=======
-        # db.create_all()
->>>>>>> Stashed changes
 
         # import hashlib
         # u = User(name='admin1',
@@ -273,11 +254,11 @@ if __name__ == '__main__':
         #          nationality='VietNam' )
         # db.session.add(u)
 
-<<<<<<< Updated upstream
+        # db.session.commit()
+        # db.create_all()
+        # #
+        # #
 
-
-=======
->>>>>>> Stashed changes
         # a1 = Airport(name='Tân Sơn Nhất')
         # a2 = Airport(name="Nội Bài")
         # a3 = Airport(name="Côn Đảo")
@@ -288,18 +269,11 @@ if __name__ == '__main__':
         # a8 = Airport(name="Đà Nẵng")
         # a9 = Airport(name="Phú Quốc")
         # a10 = Airport(name="Vinh")
-<<<<<<< Updated upstream
-        #
-        #
-        #
-        # db.session.add_all([a1, a2, a3, a4, a5, a6, a7, a8, a9, a10])
-        # db.session.commit()
-        #
-=======
+
         # db.session.add_all([a1, a2, a3, a4, a5, a6, a7, a8, a9, a10])
         # db.session.commit()
         
->>>>>>> Stashed changes
+
         # fr = Flight_regulations(min_onl_ticket_booking_time=30, min_ticket_sale_time=20, min_flight_time=40,
         #                    minimum_downtime=50, maximum_downtime=60)
         # db.session.add(fr)

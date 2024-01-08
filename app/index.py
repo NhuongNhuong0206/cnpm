@@ -1,6 +1,8 @@
 
 
 from flask import render_template, request, redirect, jsonify, session, url_for
+from sqlalchemy.sql.functions import rollup
+
 from app import app, util, controllers, dao, login_manager, admin
 from validate_email import validate_email
 from datetime import datetime
@@ -260,9 +262,12 @@ def book_ticket():
         cvv = request.form.get('cvv')
 
 
-# @app.route('/api/flight-routes')
-
-
+    return render_template('book_tickets.html', current_date=datetime.now().strftime('%Y-%m-%d'))
+  
+  
+@app.route('/pay', methods=['get', 'post'])
+def pay():
+    return render_template('pay.html')
 
 # ! Lỗi 'function' object has no attribute 'user_loader'
 # @login.user_loader
