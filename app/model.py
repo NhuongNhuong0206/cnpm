@@ -279,7 +279,7 @@ if __name__ == '__main__':
         # a8 = Airport(name="Đà Nẵng")
         # a9 = Airport(name="Phú Quốc")
         # a10 = Airport(name="Vinh")
-
+        #
         # db.session.add_all([a1, a2, a3, a4, a5, a6, a7, a8, a9, a10])
         # db.session.commit()
         
@@ -296,9 +296,16 @@ if __name__ == '__main__':
         # hoadon4 = Bill( date_and_time='2024-02-01 00:00:00', Payment_code='adadadasds')
         # hoadon5 = Bill( date_and_time='2024-07-03 00:00:00', Payment_code='adadadasds')
         # hoadon6 = Bill( date_and_time='2023-02-05 00:00:00', Payment_code='adadadasds')
+
+        # hoadon1 = Bill( date_and_time='2024-01-08 00:00:00', Payment_code='adadadasds')
+        # hoadon2 = Bill( date_and_time='2024-01-16 00:00:00', Payment_code='adadadasds')
+        # hoadon3 = Bill( date_and_time='2023-01-12 00:00:00', Payment_code='adadadasds')
+        # hoadon4 = Bill( date_and_time='2024-02-01 00:00:00', Payment_code='adadadasds')
+        # hoadon5 = Bill( date_and_time='2024-07-03 00:00:00', Payment_code='adadadasds')
+        # hoadon6 = Bill( date_and_time='2023-02-05 00:00:00', Payment_code='adadadasds')
         # db.session.add_all([hoadon1, hoadon2, hoadon3, hoadon4, hoadon5, hoadon6])
         # db.session.commit()
-        #
+
         # loaive1 = Ticket_type(name_Ticket_type='Thương gia', fare_value=50000)
         # loaive2 = Ticket_type(name_Ticket_type='Thường', fare_value=20000)
         # db.session.add_all([loaive1, loaive2])
@@ -313,7 +320,7 @@ if __name__ == '__main__':
         # tuyenBay7 = Flight_route(departure_airport_id=2, arrival_airport_id=3, name_flight_route='NoiBai-ConDao', price = 4900000)
         # db.session.add_all([tuyenBay1, tuyenBay2, tuyenBay3, tuyenBay4, tuyenBay5, tuyenBay6, tuyenBay7])
         # db.session.commit()
-        #
+
         # t1 = Ticket(bill_id=1, tick_type_id=1, status=True, flightRouter_id=3)
         # t2 = Ticket(bill_id=2, tick_type_id=2, status=False, flightRouter_id=2)
         # t3 = Ticket(bill_id=3, tick_type_id=1, status=True, flightRouter_id=2)
@@ -328,12 +335,12 @@ if __name__ == '__main__':
         # db.session.add(x)
         # db.session.commit()
         #
-        # b1=Flight(name_flight="chuyến 1",number_empty_seats=20,number_empty_books=15,active=1,deleted=0)
-        # b2=Flight(name_flight="chuyến 2",number_empty_seats=15,number_empty_books=25,active=1,deleted=0)
-        # b3=Flight(name_flight="chuyến 3",number_empty_seats=19,number_empty_books=16,active=1,deleted=0)
+        # b1=Flight(number_empty_seats=20,number_empty_books=15,active=1,deleted=0)
+        # b2=Flight(number_empty_seats=15,number_empty_books=25,active=1,deleted=0)
+        # b3=Flight(number_empty_seats=19,number_empty_books=16,active=1,deleted=0)
         # db.session.add_all([b1, b2, b3])
         # db.session.commit()
-        #
+
         # d1 = Flight_schedule(departure_time="2024-01-20 16:30:00", arrival_time="2024-01-20 18:30:00")
         # d2 = Flight_schedule(departure_time="2024-01-21 16:30:00", arrival_time="2024-01-21 18:30:00")
         # d3 = Flight_schedule(departure_time="2024-01-22 16:30:00", arrival_time="2024-01-22 18:30:00")
@@ -345,7 +352,15 @@ if __name__ == '__main__':
         # c3 = Flight_route_Flight(flight_id=3, flight_route_id=4)
         # db.session.add_all([c1, c2, c3])
         # db.session.commit()
+        #
 
+
+        # e1=Flight_Flight_schedule(flight_id=1,flight_schedule_id=1)
+        # e2=Flight_Flight_schedule(flight_id=1,flight_schedule_id=2)
+        # e3=Flight_Flight_schedule(flight_id=2, flight_schedule_id=2)
+        # db.session.add_all([e1, e2, e3])
+        # db.session.commit()
+        #
 
 
         # e1=Flight_Flight_schedule(flight_id=1,flight_schedule_id=1)
@@ -355,10 +370,13 @@ if __name__ == '__main__':
         # db.session.commit()
 
 
+
         #
         # g1= Seat_class(seat_class_name='Hạng thương gia')
         # g2 = Seat_class(seat_class_name='Hạng thường')
         # db.session.add_all([g1, g2])
         # db.session.commit()
-        # pass
+
+        pass
+
 

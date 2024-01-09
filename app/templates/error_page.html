@@ -1,16 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <title>Error Page</title>
+    <title>Sweet Alert3</title>
+
+    <!-- Include the library -->
+    <script src=
+"https://cdn.jsdelivr.net/npm/sweetalert2@9">
+    </script>
+
+    <link rel="/" href=
+"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
-<body class="container">
-  <div class="container d-flex justify-content-center align-items-center vh-100">
-        <div class="text-center">
-            <h1>Không tìm thấy chuyến bay!</h1>
-            <p>Xin lỗi, không có chuyến bay nào phù hợp với mã chuyến bay bạn đã nhập.</p>
-            <button class="btn btn-primary">Trở về trang chủ</button>
-        </div>
-    </div>
+
+<body>
+    <h1>
+        Sweet Alert3 HTML Page
+    </h1>
+
+    <script type="text/javascript">
+
+        // Show a more complex alert with
+        // the given text and properties
+        Swal.fire({
+
+            // Specify the title
+            // of the alert
+            title:
+'<strong>Hit the Like Button at GeeksForGeeks</strong>',
+            html: '',
+
+            // Show a close button
+            showCloseButton: true,
+            focusConfirm: false,
+
+            // Specify the text
+            // for the button
+            confirmButtonText:
+'<i class="fa fa-thumbs-up"></i> Great!',
+            confirmButtonAriaLabel:
+                'Thumbs up, great!',
+        })
+    </script>
 </body>
+
 </html>

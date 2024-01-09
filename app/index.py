@@ -19,8 +19,10 @@ app.add_url_rule('/api/admin_rules', 'create_admin_rules', dao.create_admin_rule
                  methods=['post'])
 app.add_url_rule('/api/flight-routes', 'get_flight_routes', dao.get_flight_routes,
                  methods=['get', 'post'])
-app.add_url_rule('/revenue-mon-stats/<selected_value>', dao.revenue_mon_stats,
-                 methods=['get'])
+# app.add_url_rule('/revenue-mon-stats/<selected_value>', dao.revenue_mon_stats,
+#                  methods=['get'])
+app.add_url_rule('/api/get_stats/<int:month>', 'get_stats', controllers.get_stats,
+                 methods=['post'])
 
 app.add_url_rule('/oauth', 'login_oauth', controllers.login_oauth)
 app.add_url_rule('/callback', 'oauth_callback', controllers.oauth_callback)
