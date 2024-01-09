@@ -74,10 +74,10 @@ class Flight_routerView(AuthenticatedAdmin):
 
       
 # Báo cáo thống kê
-class AdminStartView(BaseView):
-    @expose('/') # trả về môt mẫu HTML
-    def index(self):
-        return self.render('admin/stats.html', sats=dao.revenue_mon_stats(1))
+# class AdminStartView(BaseView):
+#     @expose('/') # trả về môt mẫu HTML
+#     def index(self):
+#         return self.render('admin/stats.html')
 
     # def is_accessible(self):
     #     print(current_user.user_role)
@@ -190,18 +190,20 @@ def delete_flight(flight_id):
 #     def index(self):
 #         return self.render('admin/check_filght.html', rules=rules, rules_list=rules_list)
 
-
-
+class StatsView(BaseView):
+    @expose('/')
+    def index(self):
+        data_stats = dao.get_data_stats_json_list()
+        return self.render('admin/stats.html', data_stats=data_stats)
 admin = Admin(app=app, name='Quản lý', template_mode='bootstrap4',index_view=MyAdminView())
 admin.add_view(AirportView(Airport, db.session, name="SÂN BAY"))
 admin.add_view(Flight_routerView(Flight_route, db.session, name="TUYẾN BAY"))
-admin.add_view(AdminStartView(name='Báo cáo thống kê'))
+admin.add_view(StatsView(name='Báo cáo thống kê'))
 # admin.add_view(RulesView(name='Lập quy đinh'))
 admin.add_view(ChangTicketView(name='Đổi vé'))
 admin.add_view(FlightScheView(Flight, db.session, name='Lịch chuyến bay'))
 admin.add_view(regulationsView(name='Lập quy định'))
 admin.add_view(LogoutView(name='Đăng xuất'))
-
 
 
 

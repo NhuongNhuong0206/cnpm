@@ -81,3 +81,13 @@ def oauth_callback():
 #         'status': 200,
 #         'data': data_search
 #     }
+
+def get_stats(month):
+    print(month)
+    print('###############################################################')
+    if int(month) == 0:
+
+        return dao.get_data_stats_json_list()
+    print('chủng bị cho mon vào')
+    print(month)
+    return dao.get_data_stats_json_list(m=month)
