@@ -3,11 +3,10 @@
 {% block content %}
 <body onload="lay()">
 <div class="bg-light d-flex w-100 justify-content-between p-2 rounded-3 shadow-sm mt-4 align-items-center">
-    <div>
-        <div><span id="fromTo"></span></div>
-        <div>
-            <span id="dateInfo"></span> | 1 hành khách
-        </div>
+     <div class="container mt-4 text-center">
+
+         <h4><span id="af_to" name="af_to"></span> <span class="arrow">&#8594;</span> <span id="ap_to" name="ap_to"></span></h4>
+        <p class="small-text" id="dateInfo" name="dateInfo"></p>
     </div>
     <a href="/" class="btn btn-primary">
         Đổi tìm kiếm

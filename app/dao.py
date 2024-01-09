@@ -1,6 +1,11 @@
+import hmac
+import json
+import uuid
 from datetime import datetime
+
 from sqlalchemy import func, and_, extract, desc
 from sqlalchemy import select
+import requests
 from app.model import Flight_regulations, User, Number_of_seats, Bill, Flight, Ticket, Flight_schedule, \
     Flight_Flight_schedule, Flight_route, Flight_route, Ticket_type, Bill, Airport
 
@@ -264,7 +269,6 @@ def lay_lich(list_flight):
                                 join(Flight_Flight_schedule). \
                                 filter(Flight_Flight_schedule.flight_id.__eq__(f.id)).all())
 
-
     print(flight_schedules)
     return flight_schedules
 
@@ -304,35 +308,7 @@ def query_flights(from_location, to_location, day_start, rank_chair):
     # Trả về danh sách kết quả
     return flights_result
 
-    # def get_Flight_route():
-    #     return Flight_route.query.filter().all()
-    # def query_flights(search_data):
-    #     # Thực hiện truy vấn để lấy thông tin chuyến bay phù hợp dựa trên dữ liệu tìm kiếm
-    #     flights = (
-    #         db.session.query(
-    #             Flight,
-    #             Flight_route,
-    #             Flight_schedule,
-    #             Airport,
-    #             Number_of_seats,
-    #             Ticket_type,
-    #             Fare
-    #         )
-    #         .join(Flight_route_Flight, Flight.id == Flight_route_Flight.flight_id)
-    #         .join(Flight_route, Flight_route_Flight.flight_route_id == Flight_route.id)
-    #         .join(Flight_schedule, Flight.id == Flight_Flight_schedule.flight_id)
-    #         .join(Airport, Flight_route.departure_airport_id == Airport.id)
-    #         .join(Number_of_seats, Flight.id == Number_of_seats.flight_id)
-    #         .join(Ticket_type, Ticket_type.id == Number_of_seats.seat_class_id)
-    #         .join(Fare, Fare.id == Number_of_seats.flight_id_id)
-    #         .filter(
-    #             # Áp dụng các điều kiện lọc từ dữ liệu tìm kiếm
-    #             Flight_route.departure_airport_id == search_data['departure_airport']['id'],
-    #             Flight_route.arrival_airport_id == search_data['arrival_airport']['id'],
-    #             # Thêm điều kiện khác tùy thuộc vào yêu cầu của bạn
-    #         )
-    #         .all()
-    #     )
+
 
     # Xử lý kết quả và trả về danh sách chuyến bay
     # result_flights = []
@@ -473,4 +449,93 @@ def get_data_stats_json(af_id, at_id, t_ticket, t_price):
         "total_ticket": int(t_ticket),
         "total_price": t_price or 0,
     }
+
+
+
+
+
+
+
+
+
+# momo api
+def create_momo_payment(data):
+    # {
+    #     idorrder:
+    #     id: 1,
+    #     total: 70000,
+    #     fId: 1,
+    #     custommers: [
+    #         { fname: 'demo',
+    #           type: 1,
+    #           sdt:
+    #                 8797889879
+    #           }
+    #     ]
+    # }
+    # https://developers.momo.vn/v3/vi/docs/payment/api/collection-link#kh%E1%BB%9Fi-t%E1%BA%A1o-ph%C6%B0%C6%A1ng-th%E1%BB%A9c-thanh-to%C3%A1n
+    # https://github.com/momo-wallet/payment/blob/master/python/MoMo.py
+
+    endpoint = "https://test-payment.momo.vn/v2/gateway/api/create"
+    # sau khi thanh toán hoàn tất sẽ chuyển về trang bên dưới
+    redirectUrl = "http://localhost:5000/preview_ticket/" + str(data.get("u_id"))
+    # sau khi thanh toán hoàn tất momo sẽ gửi một thông báo về url bên dưới với method post
+    # theo https://github.com/momo-wallet/payment/issues/42, ipnUrl không hỗ trợ localhost
+    # => sử dụng ngrok để tạo một api public như bên dưới (https://ngrok.com/docs/getting-started/?os=windows)
+    # chỉ cần đến step 3 để có url (sử dụng được trên internet), sau đó truy cập vào url đó thay vì localhost:5000
+    # tránh đăng nhập bằng google, do config trong oauth_config.json nên gg sẽ redirect về localhost lại
+    # instance payment notification
+    ipnUrl = "https://wondrous-sturgeon-enhanced.ngrok-free.app/api/momo_ipn"
+
+    accessKey = "F8BBA842ECF85"
+    secretKey = "K951B6PE1waDMi640xX08PD3vg6EkVlz"
+    partnerCode = "MOMO"
+    orderInfo = "MANAGE AIRLINE | PAY WITH MOMO 2"
+    amount = data.get("total")
+    orderId = str(uuid.uuid4())
+    requestId = str(uuid.uuid4())
+    requestType = "captureWallet"
+    extraData = ""
+
+    rawSignature = "accessKey=" + accessKey + "&amount=" + amount + "&extraData=" + extraData + "&ipnUrl=" + ipnUrl \
+                   + "&orderId=" + orderId + "&orderInfo=" + orderInfo + "&partnerCode=" + partnerCode \
+                   + "&redirectUrl=" + redirectUrl + "&requestId=" + requestId + "&requestType=" + requestType
+
+    h = hmac.new(bytes(secretKey, 'ascii'), bytes(rawSignature, 'ascii'), hashlib.sha256)
+    signature = h.hexdigest()
+
+    data = {
+        'partnerCode': partnerCode,
+        'partnerName': "DEMO 123",
+        'storeId': "DEMO456",
+        'requestId': requestId,
+        'amount': amount,
+        'orderId': orderId,
+        'orderInfo': orderInfo,
+        'redirectUrl': redirectUrl,
+        'ipnUrl': ipnUrl,
+        'lang': "vi",
+        'extraData': extraData,
+        'requestType': requestType,
+        'signature': signature,
+        'orderExpireTime': 10,
+    }
+
+    data = json.dumps(data)
+    clen = len(data)
+    response = requests.post(endpoint,
+                             data=data,
+                             headers={'Content-Type': 'application/json', 'Content-Length': str(clen)})
+    return response.json()
+
+
+def momo_ipn():
+    # https://developers.momo.vn/v3/vi/docs/payment/api/result-handling/notification#ipn---instant-payment-notification
+    # lắng nghe thông tin trả về khi thanh toán hoàn tất (resultcode = 0)
+    # kiểm tra session đã lưu so sánh orderId để tạo thông tin tương ứng lưu dưới db
+    data = request.get_data(as_text=True)
+    print(data)
+    payment_data = json.loads(data)
+
+    return jsonify({"message": payment_data})
 
