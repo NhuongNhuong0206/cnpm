@@ -55,3 +55,33 @@
 .m-r{
     margin-right: 10px
 }
+
+/* Nền màu và đổ bóng cho container */
+.container {
+    background-color: #f8f9fa; /* Màu nền */
+    padding: 20px;
+    border-radius: 10px; /* Bo tròn viền */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+}
+
+/* Chữ màu đậm */
+h4 {
+    font-weight: bold;
+    color: #007bff; /* Màu chữ xanh */
+}
+
+/* Chữ nhỏ và màu xám nhạt */
+.small-text {
+    font-size: 14px;
+    color: #6c757d; /* Màu chữ xám nhạt */
+}
+
+    .center-vertically {
+        display: flex;
+        align-items: center;
+    }
+    .larger-text {
+        font-size: 16px; /* Điều chỉnh kích thước chữ theo mong muốn */
+        font-weight: bold; /* Nếu bạn muốn chữ đậm */
+    }
+

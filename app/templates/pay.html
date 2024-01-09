@@ -59,7 +59,7 @@
 
 
                 <div class="">
-                    <button type="button" class=" btn-success">Thanh toán</button>
+                    <button id="btn-momo-payment" type="button" class=" btn-success">Thanh toán với MOMO</button>
                 </div>
 
             </div>
@@ -111,3 +111,5 @@
 </div>
 
 {% endblock %}
+
+{% block js %}<script src="{{ url_for('static', filename='js/pay.js') }}"></script>{% endblock%}

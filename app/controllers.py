@@ -62,22 +62,21 @@ def oauth_callback():
         return render_template('homeAndFindFlights.html')
     return render_template('homeAndFindFlights.html')
 
-# def search_flight_schedule():
-#     data = request.get_json()
-#     try:
-#         inp_search = dao.get_inp_search_json(af_id=data['departure_airport_id'], at_id=data['arrival_airport_id'],
-#                                              time_start=data['time_start'], ticket_type=data['ticket_type'])
-#
-#         data_search = dao.search_flight_schedule(ap_from=data['departure_airport_id'], ap_to=data['arrival_airport_id'],
-#                                                  time_start=data['time_start'], ticket_type=data['ticket_type'])
-#         session['data_search'] = data_search
-#         session['inp_search'] = inp_search
-#     except:
-#         return {
-#             'status': 500,
-#             'data': 'error'
-#         }
-#     return {
-#         'status': 200,
-#         'data': data_search
-#     }
+
+# momo api
+def momo_payment():
+    if request.method == 'POST':
+        data = request.get_json()
+        print('controller', data)
+        # xử lý dữ liệu tại đây, ví dụ như lưu tạm vào session
+        # để sau khi thanh toán thành công momo sẽ thông báo qua < def momo_ipn() > bên dưới
+        # bắt sự kiện đó + dữ liệu lưu tạm trong session để lưu dữ liệu xuống db
+        result = dao.create_momo_payment(data)
+        return result
+
+
+def momo_ipn():
+    print('Momo ipn receive signal!')
+    result = dao.momo_ipn()
+    return result
+

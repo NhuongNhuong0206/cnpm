@@ -1,6 +1,5 @@
-
-
 from flask import render_template, request, redirect, jsonify, session, url_for
+from sqlalchemy.orm import aliased
 from sqlalchemy.sql.functions import rollup
 
 from app import app, util, controllers, dao, login_manager, admin
@@ -8,7 +7,8 @@ from validate_email import validate_email
 from datetime import datetime
 from flask_login import login_user, logout_user
 
-from app.model import UserRoleEnum, Flight, Ticket_type, Ticket, Bill,User
+from app.model import UserRoleEnum, Flight, Ticket_type, Ticket, Bill, User, Flight_schedule, Flight_Flight_schedule, \
+    Flight_route_Flight
 
 app.add_url_rule('/api/user/confirm', 'confirm_user', controllers.confirm_user,
                  methods=['post'])
@@ -26,41 +26,79 @@ app.add_url_rule('/oauth', 'login_oauth', controllers.login_oauth)
 app.add_url_rule('/callback', 'oauth_callback', controllers.oauth_callback)
 
 
-@app.route('/')
+@app.route('/', methods=['POST', 'GET'])
 def index():
-    # Lấy dữ liệu từ form
-    ticket_type = request.form.get('ticketType')
-    print(ticket_type)
-    from_location = request.form.get('from')
-    to_location = request.form.get('to')
-    day_start = request.form.get('dayStart')
-    rank_chair = request.form.get('rankChair')
-    # Kiểm tra giá trị trong session
-
-    # Kiểm tra các giá trị nhận từ form
-    print(ticket_type)
-    print(from_location)
-    print(to_location)
-    print(day_start)
-    print(rank_chair)
-
-    # Thực hiện truy vấn từ cơ sở dữ liệu
-    flights_result = dao.query_flights(from_location, to_location, day_start, rank_chair)
-
-    # Lưu kết quả vào session để sử dụng ở route /fight_list
-    session['data_search'] = flights_result
-    session['inp_search'] = {'from_location': from_location,
-                             'to_location': to_location,
-                             'day_start': day_start,
-                             'ticket_type': ticket_type,
-                             'rank_chair': rank_chair}
-    print(session['inp_search'])
-
-    print(session['data_search'])
+    airport_list = dao.get_airport_list()
+    if request.method.__eq__('POST'):
+        # Lấy dữ liệu từ form
+        ticket_type = request.form.get('ticketType')
+        from_location = request.form.get('from')
+        to_location = request.form.get('to')
+        day_start = request.form.get('dayStart')
+        rank_chair = request.form.get('rankChair')
+        # if from_location and to_location and from_location.isdigit() and to_location.isdigit():
+        l = []
+        l1 = []
+        list_fight_route = dao.get_Flight_route()
+        for r in list_fight_route:
+            if int(from_location) == r.departure_airport_id and int(to_location) == r.arrival_airport_id:
+                l.append(r)
+        for ll in l:
+            l1.append(ll.id)
+        flight_schedule_alias = aliased(Flight_Flight_schedule)
+        flight_schedules = (
+            db.session.query(Flight_schedule)
+            .join(flight_schedule_alias, Flight_schedule.id == flight_schedule_alias.flight_schedule_id)
+            .join(Flight, Flight.id == flight_schedule_alias.flight_id)
+            .join(Flight_route_Flight, Flight_route_Flight.flight_id == Flight.id)
+            .join(Flight_route, Flight_route_Flight.flight_route_id == Flight_route.id)
+            .filter(Flight_route.id.in_(l1))
+            .all()
+        )
+        t= request.form.get('button')
+        print(t)
+        if t == "-1":
+            return render_template('homeAndFindFlights.html', dstuyen=l, rank_chair=rank_chair,
+                               flight_schedules=flight_schedules, airport_list=airport_list)
+        else:
+            e=l[int(t)].id
+            print(e, 'hihi')
+            return render_template('book_tickets.html', e=e, dstuyen=l)
 
     # Chuyển hướng đến trang flightList.html
-    return render_template('homeAndFindFlights.html')
+    return render_template('homeAndFindFlights.html', airport_list=airport_list)
 
+
+@app.route('/book_ticket', methods=['GET','POST'])
+
+def book_ticket():
+    if request.method == 'POST':
+        # Lấy dữ liệu từ các trường input
+        fl_r=request.form.get('flr')
+        full_name = request.form.get('fullName')
+        email = request.form.get('email')
+        address = request.form.get('address')
+        phone = request.form.get('phone')
+        dob = request.form.get('dob')
+        id_card = request.form.get('idCard')
+        nationality = request.form.get('nationality')
+        expiry_date = request.form.get('expiryDate')
+        card_number = request.form.get('cardNumber')
+        cvv = request.form.get('cvv')
+
+    return render_template('book_tickets.html', current_date=datetime.now().strftime('%Y-%m-%d'))
+
+
+@app.route('/fight_list', methods=['GET', 'POST'])
+def fight_list():
+    # # Lấy dữ liệu từ session để hiển thị trên trang flightList.html
+    # data_search = session.get('data_search', [])
+    # inp_search = session.get('inp_search', {})
+    received_data = request.args.to_dict()
+    print(received_data)
+    #
+
+    return render_template('flightList.html')
 
 
 @app.route('/revenue-mon-stats/<selected_value>', methods=['GET'])
@@ -97,21 +135,8 @@ def revenue_mon_stats(selected_value):
     return sum
 
 
-
 # @app.route('/search_flights', methods=['POST'])
 # def search_flights():
-
-
-@app.route('/fight_list', methods=['GET', 'POST'])
-def fight_list():
-    # Lấy dữ liệu từ session để hiển thị trên trang flightList.html
-    data_search = session.get('data_search', [])
-    inp_search = session.get('inp_search', {})
-    a = dao.get_airport_list()
-    print(a)
-    print()
-    # Render trang flightList.html với dữ liệu tìm kiếm
-    return render_template('flightList.html', data_search=data_search, inp_search=inp_search, a=a)
 
 
 @app.route('/ticket')
@@ -246,41 +271,28 @@ def logup():
     return render_template('signUp.html', er_m_num=er_m_num, er_m_tex=er_m_tex, er_m=er_m, er=er)
 
 
-@app.route('/book_ticket', methods=['get', 'post'])
-def book_ticket():
-    if request.method == 'POST':
-        # Lấy dữ liệu từ các trường input
-        full_name = request.form.get('fullName')
-        email = request.form.get('email')
-        address = request.form.get('address')
-        phone = request.form.get('phone')
-        dob = request.form.get('dob')
-        id_card = request.form.get('idCard')
-        nationality = request.form.get('nationality')
-        expiry_date = request.form.get('expiryDate')
-        card_number = request.form.get('cardNumber')
-        cvv = request.form.get('cvv')
 
 
-    return render_template('book_tickets.html', current_date=datetime.now().strftime('%Y-%m-%d'))
-  
-  
+
 @app.route('/pay', methods=['get', 'post'])
 def pay():
     return render_template('pay.html')
 
-# ! Lỗi 'function' object has no attribute 'user_loader'
-# @login.user_loader
-# def load_user(user_id):
-#     return User.query.get(int(user_id))
+    # ! Lỗi 'function' object has no attribute 'user_loader'
+    # @login.user_loader
+    # def load_user(user_id):
+    #     return User.query.get(int(user_id))
 
-# @login_manager.user_loader
-# def load_user(user_id):
-#     return User.query.get(int(user_id))
+    # @login_manager.user_loader
+    # def load_user(user_id):
+    #     return User.query.get(int(user_id))
 
     return render_template('book_tickets.html', current_date=datetime.now().strftime('%Y-%m-%d'))
 
 
+# momo api
+app.add_url_rule('/api/momo_ipn', 'momo_ipn', controllers.momo_ipn, methods=['POST'])
+app.add_url_rule('/api/momo_payment', 'momo_payment', controllers.momo_payment, methods=['POST'])
 
 if __name__ == '__main__':
     from app.admin import *

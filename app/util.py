@@ -141,4 +141,8 @@ def add_regulations(min_onl_ticket_booking_time, min_ticket_sale_time, min_fligh
     db.session.add(a)
     db.session.commit()
     return a
-
+def add_flight_route__flight(flight_route_id, flight_id):
+    a = Flight_route_Flight(flight_route_id=flight_route_id, flight_id=flight_id)
+    db.session.add(a)
+    db.session.commit()
+    return a

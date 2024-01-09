@@ -155,7 +155,7 @@ class FlightScheView(AuthenticatedStaff):
                 num_1st = util.add_Number_of_seats(seat_class_id=1, num=int(quantity_1st), flight_id=flight.id)
                 num_2nd = util.add_Number_of_seats(seat_class_id=2, num=int(quantity_2nd), flight_id=flight.id)
                 flight_Flight_schedule = util.add_Flight_Flight_schedule(flight_schedule_id=time.id, flight_id=flight.id)
-
+                ff = util.add_flight_route__flight(flight_route_id=ap.id, flight_id=flight.id)
         flight_list = dao.get_flight()# lấy tất cả các chuyến bay
         print(flight_list, 'danh sách chuyến bay')
         list_light_route = dao.get_Flight_route()# lấy tất cả tuyến bay

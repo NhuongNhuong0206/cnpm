@@ -58,6 +58,20 @@ class Airport(BaseModel):
     def __str__(self):
         return self.name
 
+
+# Bảng qui định chuyến bay
+class Flight_regulations(BaseModel):
+    __tablename__ = 'flight_regulations'
+    # id = Column(Integer, primary_key=True, autoincrement=True)
+    min_onl_ticket_booking_time = Column(Integer, nullable=False)#thời gian mua vé onl tối thiểu
+    min_ticket_sale_time = Column(Integer, nullable=False)#thời gian bán vé tối thiểu
+    min_flight_time = Column(Integer, nullable=False)#thời gian bay tối thiểu
+    minimum_downtime = Column(Integer, nullable=False, default=30)#thời gian dừng tối thiểu
+    maximum_downtime = Column(Integer, nullable=False, default=20)#thời gian dừng tối da
+    current_date = Column(Date)
+    def __str__(self):
+        return self.min_onl_ticket_booking_time
+
 class Flight_route(BaseModel):
     __tablename__ = 'flight_route'
     departure_airport_id = Column(Integer, ForeignKey(Airport.id))  # 3
@@ -74,18 +88,6 @@ class Flight_route(BaseModel):
     def __str__(self):
         return self.name_flight_route
 
-# Bảng qui định chuyến bay
-class Flight_regulations(BaseModel):
-    __tablename__ = 'flight_regulations'
-    # id = Column(Integer, primary_key=True, autoincrement=True)
-    min_onl_ticket_booking_time = Column(Integer, nullable=False)#thời gian mua vé onl tối thiểu
-    min_ticket_sale_time = Column(Integer, nullable=False)#thời gian bán vé tối thiểu
-    min_flight_time = Column(Integer, nullable=False)#thời gian bay tối thiểu
-    minimum_downtime = Column(Integer, nullable=False, default=30)#thời gian dừng tối thiểu
-    maximum_downtime = Column(Integer, nullable=False, default=20)#thời gian dừng tối da
-    current_date = Column(Date)
-    def __str__(self):
-        return self.min_onl_ticket_booking_time
 
 
 # Bảng chuyen bay
@@ -229,6 +231,14 @@ class Ticket(BaseModel):
     status = Column(Boolean, nullable=False)
     def __str__(self):
         return self.Ticket
+
+class timve(BaseModel):
+    __tablename__ = 'timve'
+    ngay_di = Column(String(20))
+    san_di = Column(String(20))
+    san_den = Column(String(20))
+    def __str__(self):
+        return self.name
 
       
 # Viết bên index nó không hiểu. Phải viết qua model nó mới hiểu
