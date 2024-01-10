@@ -20,9 +20,8 @@ app.secret_key = '^%*&^^HJGHJGHJFD%^&%&*^*(^^^&^(*^^$%^GHJFGHJH'
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:%s@localhost/cnpm?charset=utf8mb4" % quote('Abc@123')
-
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:%s@localhost/cnpm?charset=utf8mb4" % quote('123456')
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:%s@localhost/cnpm1?charset=utf8mb4" % quote('Admin@123')
+# app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:%s@localhost/cnpm?charset=utf8mb4" % quote('123456')
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 app.config["PAGE_SIZE"] = 6

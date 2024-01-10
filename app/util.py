@@ -1,10 +1,12 @@
 import json, os
+from datetime import datetime
 
 from sqlalchemy import func
+from sqlalchemy.orm import aliased
 
 from app import app, db, flow
 from flask import request
-from app.model import (User,UserRoleEnum, Flight_route, Airport,
+from app.model import (Ticket,Bill,User,UserRoleEnum, Flight_route, Airport,
                        Flight_schedule, Flight, Flight_Flight_schedule, Flight_route_Flight, Number_of_seats, Flight_regulations,Ticket_type)
 import hashlib
 import re
@@ -146,3 +148,91 @@ def add_flight_route__flight(flight_route_id, flight_id):
     db.session.add(a)
     db.session.commit()
     return a
+
+
+def add_bill(payment_code):
+    bill = Bill(Payment_code=payment_code, date_and_time=datetime.now())
+    db.session.add(bill)
+    db.session.commit()
+    return bill
+
+
+def add_ticket(bill_id, flight_router_id, fullName, phoneNumber, email):
+    ticket = Ticket(bill_id=bill_id, flightRouter_id=flight_router_id, fullName=fullName, phoneNumber=phoneNumber, \
+                    email=email, status=True)
+    db.session.add(ticket)
+    db.session.commit()
+    return ticket
+
+
+def get_data_ticket(order_id):
+    bill_id = None
+    time_payment = None
+    fullname = None
+    email = None
+    phone = None
+    ticket_id = None
+    f_id = None
+    name = None
+    time_from = None
+    time_to = None
+    price = None
+
+    bill_list = db.session.query(Bill)
+    ticket_list = db.session.query(Ticket)
+    for b in bill_list:
+        if b.Payment_code == order_id:
+            bill_id = b.id
+            time_payment = b.date_and_time
+
+    for t in ticket_list:
+        if t.bill_id == bill_id:
+            f_id = t.flightRouter_id
+            fullname = t.fullName
+            email = t.email
+            phone = t.phoneNumber
+
+    flight_route_list = db.session.query(Flight_route)
+    airport_list = db.session.query(Airport)
+    for r in flight_route_list:
+        if r.id == f_id:
+            name = r.name_flight_route
+            price = r.price
+
+    flight_schedule_alias = aliased(Flight_Flight_schedule)
+    flight_schedules = (
+        db.session.query(Flight_schedule)
+        .join(flight_schedule_alias, Flight_schedule.id == flight_schedule_alias.flight_schedule_id)
+        .join(Flight, Flight.id == flight_schedule_alias.flight_id)
+        .join(Flight_route_Flight, Flight_route_Flight.flight_id == Flight.id)
+        .join(Flight_route, Flight_route_Flight.flight_route_id == Flight_route.id)
+        .filter(Flight_route.id == f_id)
+        .all()
+    )
+
+    time_from = flight_schedules[0].departure_time
+    time_to = flight_schedules[0].arrival_time
+
+    return {
+        'name': name,
+        'time_from': time_from,
+        'time_to': time_to,
+        'price': price,
+        'fullName': fullname,
+        'email': email,
+        'phone': phone,
+        'time_payment': time_payment
+    }
+
+
+if __name__ == '__main__':
+    from app import app
+
+    with app.app_context():
+        print(get_data_ticket("65cb809c-b95e-4ea6-bae0-f5f1fdb7c6ed"))
+
+
+
+
+
+

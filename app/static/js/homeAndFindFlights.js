@@ -147,3 +147,22 @@ window.onload = () => {
 
 }
 
+
+// dat ve
+
+const infoFlight = document.querySelectorAll('#info-flight > th')
+const btnSubmit = document.querySelector('#btn-submit')
+
+btnSubmit.onclick = (e) => {
+    const data = {
+        idFlight: infoFlight[0].innerText,
+        from_to: infoFlight[1].innerText,
+        airport_bw: infoFlight[2].innerText,
+        time: infoFlight[3].innerText,
+        chairType: infoFlight[4].innerText,
+        price: infoFlight[5].innerText,
+    }
+
+    localStorage.setItem("infoTicket", JSON.stringify(data))
+}
+

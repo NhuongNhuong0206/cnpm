@@ -32,8 +32,8 @@ app.add_url_rule('/callback', 'oauth_callback', controllers.oauth_callback)
 def index():
     airport_list = dao.get_airport_list()
     if request.method.__eq__('POST'):
+        print(request.form)
         # Lấy dữ liệu từ form
-        ticket_type = request.form.get('ticketType')
         from_location = request.form.get('from')
         to_location = request.form.get('to')
         day_start = request.form.get('dayStart')
@@ -57,13 +57,13 @@ def index():
             .filter(Flight_route.id.in_(l1))
             .all()
         )
-        t= request.form.get('button')
+        t = request.form.get('button')
         print(t)
         if t == "-1":
             return render_template('homeAndFindFlights.html', dstuyen=l, rank_chair=rank_chair,
-                               flight_schedules=flight_schedules, airport_list=airport_list)
+                                   flight_schedules=flight_schedules, airport_list=airport_list)
         else:
-            e=l[int(t)].id
+            e = l[int(t)].id
             print(e, 'hihi')
             return render_template('book_tickets.html', e=e, dstuyen=l)
 
@@ -71,12 +71,11 @@ def index():
     return render_template('homeAndFindFlights.html', airport_list=airport_list)
 
 
-@app.route('/book_ticket', methods=['GET','POST'])
-
+@app.route('/book_ticket', methods=['GET', 'POST'])
 def book_ticket():
     if request.method == 'POST':
         # Lấy dữ liệu từ các trường input
-        fl_r=request.form.get('flr')
+        fl_r = request.form.get('flr')
         full_name = request.form.get('fullName')
         email = request.form.get('email')
         address = request.form.get('address')
@@ -273,9 +272,6 @@ def logup():
     return render_template('signUp.html', er_m_num=er_m_num, er_m_tex=er_m_tex, er_m=er_m, er=er)
 
 
-
-
-
 @app.route('/pay', methods=['get', 'post'])
 def pay():
     return render_template('pay.html')
@@ -295,6 +291,8 @@ def pay():
 # momo api
 app.add_url_rule('/api/momo_ipn', 'momo_ipn', controllers.momo_ipn, methods=['POST'])
 app.add_url_rule('/api/momo_payment', 'momo_payment', controllers.momo_payment, methods=['POST'])
+
+app.add_url_rule('/preview_ticket/<string:id>', 'preview_ticket', controllers.preview_ticket, methods=['GET'])
 
 if __name__ == '__main__':
     from app.admin import *

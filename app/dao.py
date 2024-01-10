@@ -11,12 +11,12 @@ from app.model import Flight_regulations, User, Number_of_seats, Bill, Flight, T
 
 from sqlalchemy.orm import aliased
 
-
-from app.model import Flight_regulations, User, Number_of_seats, Bill, Flight, Ticket, Flight_schedule,Flight_Flight_schedule, \
+from app.model import Flight_regulations, User, Number_of_seats, Bill, Flight, Ticket, Flight_schedule, \
+    Flight_Flight_schedule, \
     Flight_route, Ticket_type, Bill, Airport
 
 from flask import session, render_template, request, jsonify
-from app import db
+from app import db, util
 import hashlib
 
 '''
@@ -88,19 +88,17 @@ def get_data_stats():
         Flight_route.departure_airport_id,
         Flight_route.arrival_airport_id,
         func.count(Ticket.id),
-        (func.sum(Ticket_type.fare_value + Flight_route.price)).label("total_price")
+        (func.sum(Flight_route.price)).label("total_price")
     ).join(
         Ticket,
         Ticket.flightRouter_id == Flight_route.id
-    ).join(
-        Ticket_type,
-        Ticket.tick_type_id == Ticket_type.id
     ).filter(
         Ticket.status == True
     ).group_by(
         Flight_route.departure_airport_id,
         Flight_route.arrival_airport_id
     ).order_by(desc("total_price"))
+    print(q)
     return q.all()
 
 
@@ -110,13 +108,10 @@ def get_data_stats_by_month(m):
         Flight_route.departure_airport_id,
         Flight_route.arrival_airport_id,
         func.count(Ticket.id),
-        (func.sum(Ticket_type.fare_value + Flight_route.price)).label("total_price")
+        (func.sum(Flight_route.price)).label("total_price")
     ).join(
         Ticket,
         Ticket.flightRouter_id == Flight_route.id
-    ).join(
-        Ticket_type,
-        Ticket.tick_type_id == Ticket_type.id
     ).join(
         Bill,
         Ticket.bill_id == Bill.id
@@ -155,6 +150,7 @@ def get_data_stats_json_list(m=None):
         'total_ticket': total_ticket
     }
 
+
 # def get_data_stats_by_month(val):
 #     start_date = '2024-01-01 00:00:00'  # dữ liệu ngày bắt đầu trong tháng (dayf)
 #     end_date = '2024-01-31 00:00:00'  # Dữ liệu ngày kết thúc trong tháng (days)
@@ -183,7 +179,6 @@ def get_data_stats_json_list(m=None):
 #     )
 #     print(ticket_date_date)
 #     return ticket_date_date
-
 
 
 # Thống kê
@@ -239,7 +234,6 @@ def get_flight():
     return f_list
 
 
-
 def get_flight_sche():
     f_list = Flight_schedule.query.filter().all()
     return f_list
@@ -264,7 +258,6 @@ def get_Flight_route():
 def lay_lich(list_flight):
     flight_schedules = []
     for f in list_flight:
-
         flight_schedules.extend(db.session.query(Flight_schedule). \
                                 join(Flight_Flight_schedule). \
                                 filter(Flight_Flight_schedule.flight_id.__eq__(f.id)).all())
@@ -308,8 +301,6 @@ def query_flights(from_location, to_location, day_start, rank_chair):
     # Trả về danh sách kết quả
     return flights_result
 
-
-
     # Xử lý kết quả và trả về danh sách chuyến bay
     # result_flights = []
     # for flight, flight_route, flight_schedule, airport, num_seats, ticket_type, fare in flights:
@@ -341,28 +332,28 @@ def query_flights(from_location, to_location, day_start, rank_chair):
     # def get_airport_bw_list(f_id):
     #     return Flight_route.query.filter(Flight_route.flight_sche_id.__eq__(f_id)).all()
     # def get_airport_bw_list_json(f_id):
-        # bwa_list = (
-        #     db.session.query(Flight_route)
-        #     .join(Flight, Flight_route.fl_route3 == Flight.id)
-        #     .filter(Flight_route.bw_airport_id == f_id,
-        #             Flight.deleted == False)
-        #     .all()
-        #
-        #     bwa_list =Flight_route.query.filter(Flight_route.bw_airport_id.__eq__(f_id),
-        #                                            Flight.deleted.__eq__(False))
-        #     bw_airport_list =[]
-        #
-        #     for bwa in bwa_list:
-        #         obj = {
-        #         'id': bwa.id,
-        #         'departure_airport': get_airport_json(bwa.departure_airport_id),
-        #         'arrival_airport': bwa.arrival_airport_id,
-        #         'bw_airport_id': bwa.bw_airport_id,
-        #         'name_flight_route':bwa.name_flight_route,
-        #         'price': bwa.price
-        #          }
-        #         bw_airport_list.append(obj)
-        #     return bw_airport_list
+    # bwa_list = (
+    #     db.session.query(Flight_route)
+    #     .join(Flight, Flight_route.fl_route3 == Flight.id)
+    #     .filter(Flight_route.bw_airport_id == f_id,
+    #             Flight.deleted == False)
+    #     .all()
+    #
+    #     bwa_list =Flight_route.query.filter(Flight_route.bw_airport_id.__eq__(f_id),
+    #                                            Flight.deleted.__eq__(False))
+    #     bw_airport_list =[]
+    #
+    #     for bwa in bwa_list:
+    #         obj = {
+    #         'id': bwa.id,
+    #         'departure_airport': get_airport_json(bwa.departure_airport_id),
+    #         'arrival_airport': bwa.arrival_airport_id,
+    #         'bw_airport_id': bwa.bw_airport_id,
+    #         'name_flight_route':bwa.name_flight_route,
+    #         'price': bwa.price
+    #          }
+    #         bw_airport_list.append(obj)
+    #     return bw_airport_list
 
 
 # def search_flight_schedule(ap_from, ap_to, time_start, ticket_type):
@@ -384,22 +375,22 @@ def query_flights(from_location, to_location, day_start, rank_chair):
 #         flight_sche = get_flight_sche_json(f.id)
 #         flight_sche_list.append(flight_sche)
 #     return flight_sche_list
-    # def get_inp_search_json(af_id, at_id, time_start, ticket_type):
-    #     af = get_airport_json(af_id)
-    #     at = get_airport_json(at_id)
-    #     return {
-    #         'airport_from': af,
-    #         'airport_to': at,
-    #         'time_start': time_start,
-    #         'ticket_type': ticket_type
-    #     }
+# def get_inp_search_json(af_id, at_id, time_start, ticket_type):
+#     af = get_airport_json(af_id)
+#     at = get_airport_json(at_id)
+#     return {
+#         'airport_from': af,
+#         'airport_to': at,
+#         'time_start': time_start,
+#         'ticket_type': ticket_type
+#     }
 
-    # def get_airport_list_json(a_id):
-    #     a = get_airport_list(a_id)
-    #     return {
-    #         'id': a.id,
-    #         'name': a.name
-    #     }
+# def get_airport_list_json(a_id):
+#     a = get_airport_list(a_id)
+#     return {
+#         'id': a.id,
+#         'name': a.name
+#     }
 
 
 # def get_flight_sche_json(f_id):
@@ -435,12 +426,15 @@ def query_flights(from_location, to_location, day_start, rank_chair):
 
 def get_airport(a_id):
     return Airport.query.filter(Airport.id.__eq__(a_id)).all()[0]
+
+
 def get_airport_json(a_id):
     a = get_airport(a_id)
     return {
         'id': a.id,
         'name': a.name
     }
+
 
 def get_data_stats_json(af_id, at_id, t_ticket, t_price):
     return {
@@ -450,50 +444,34 @@ def get_data_stats_json(af_id, at_id, t_ticket, t_price):
         "total_price": t_price or 0,
     }
 
-
-
-
-
-
-
-
+payment_momo = []
 
 # momo api
-def create_momo_payment(data):
-    # {
-    #     idorrder:
-    #     id: 1,
-    #     total: 70000,
-    #     fId: 1,
-    #     custommers: [
-    #         { fname: 'demo',
-    #           type: 1,
-    #           sdt:
-    #                 8797889879
-    #           }
-    #     ]
-    # }
+def create_momo_payment(obj):
+
+    global payment_momo
+
     # https://developers.momo.vn/v3/vi/docs/payment/api/collection-link#kh%E1%BB%9Fi-t%E1%BA%A1o-ph%C6%B0%C6%A1ng-th%E1%BB%A9c-thanh-to%C3%A1n
     # https://github.com/momo-wallet/payment/blob/master/python/MoMo.py
+    orderId = str(uuid.uuid4())
+    requestId = str(uuid.uuid4())
 
     endpoint = "https://test-payment.momo.vn/v2/gateway/api/create"
     # sau khi thanh toán hoàn tất sẽ chuyển về trang bên dưới
-    redirectUrl = "http://localhost:5000/preview_ticket/" + str(data.get("u_id"))
+    redirectUrl = "http://localhost:5000/preview_ticket/" + orderId
     # sau khi thanh toán hoàn tất momo sẽ gửi một thông báo về url bên dưới với method post
     # theo https://github.com/momo-wallet/payment/issues/42, ipnUrl không hỗ trợ localhost
     # => sử dụng ngrok để tạo một api public như bên dưới (https://ngrok.com/docs/getting-started/?os=windows)
     # chỉ cần đến step 3 để có url (sử dụng được trên internet), sau đó truy cập vào url đó thay vì localhost:5000
     # tránh đăng nhập bằng google, do config trong oauth_config.json nên gg sẽ redirect về localhost lại
     # instance payment notification
-    ipnUrl = "https://wondrous-sturgeon-enhanced.ngrok-free.app/api/momo_ipn"
+    ipnUrl = "https://ferret-noted-heron.ngrok-free.app/api/momo_ipn"
 
     accessKey = "F8BBA842ECF85"
     secretKey = "K951B6PE1waDMi640xX08PD3vg6EkVlz"
     partnerCode = "MOMO"
-    orderInfo = "MANAGE AIRLINE | PAY WITH MOMO 2"
-    amount = data.get("total")
-    orderId = str(uuid.uuid4())
-    requestId = str(uuid.uuid4())
+    orderInfo = "CNPM - QLCB | PAY WITH MOMO" # k dau
+    amount = obj.get("total")
     requestType = "captureWallet"
     extraData = ""
 
@@ -526,7 +504,13 @@ def create_momo_payment(data):
     response = requests.post(endpoint,
                              data=data,
                              headers={'Content-Type': 'application/json', 'Content-Length': str(clen)})
+
+    obj["orderId"] = orderId
+    payment_momo.append(obj)
+    print(payment_momo)
+
     return response.json()
+
 
 
 def momo_ipn():
@@ -534,8 +518,28 @@ def momo_ipn():
     # lắng nghe thông tin trả về khi thanh toán hoàn tất (resultcode = 0)
     # kiểm tra session đã lưu so sánh orderId để tạo thông tin tương ứng lưu dưới db
     data = request.get_data(as_text=True)
-    print(data)
-    payment_data = json.loads(data)
+    data_object = json.loads(data)
+    order_id = data_object["orderId"]
+    result_code = data_object["resultCode"]
 
-    return jsonify({"message": payment_data})
+    if (result_code != 0):
+        print("Thanh toán không thành công!")
+        pass
+
+    global payment_momo
+    filtered_data = list(filter(lambda x: x.get('orderId') == order_id, payment_momo))
+    payment_momo = list(filter(lambda x: x.get('orderId') != order_id, payment_momo))
+
+    if filtered_data:
+        data = filtered_data[0]
+        bill = util.add_bill(order_id)
+        ticket = util.add_ticket(bill.id, int(data["flightId"]), fullName=data["infoCustomer"]["fullName"], \
+                                 phoneNumber=data["infoCustomer"]["phone"],  email=data["infoCustomer"]["email"])
+
+
+    else:
+        return {
+            'status': 'error',
+            'message': 'Thanh toan that bai'
+        }
 
