@@ -1,7 +1,7 @@
 {% extends 'layout/base.html' %}
 
 {% block content %}
-{% for t in t_list_json %}
+
 <div class="row">
     <table class="table mt-4" style="border: 1px solid #ccc;">
         <thead>
@@ -11,22 +11,22 @@
         </thead>
         <tbody>
             <tr>
-                <td>Chuyến bay: <span class="fw-bold">{{ t['flight_info'] }}</span></td>
-                <td>Hành khách: <span class="fw-bold">{{ t['passenger_name'] }}</span></td>
+                <td>Chuyến bay: <span class="fw-bold">{{ data['name'] }}</span></td>
+                <td>Hành khách: <span class="fw-bold">{{ data['fullName'] }}</span></td>
             </tr>
             <tr>
-                <td>CMND/CCCD: <span class="fw-bold">{{ t['id_card'] }}</span></td>
-                <td>Điện thoại: <span class="fw-bold">{{ t['phone_number'] }}</span></td>
+                <td>Email: <span class="fw-bold">{{ data['email'] }}</span></td>
+                <td>Điện thoại: <span class="fw-bold">{{ data['phone'] }}</span></td>
             </tr>
             <tr>
-                <td>Hạng vé: <span class="fw-bold">{{ t['ticket_class'] }}</span></td>
-                <td>Giá tiền: <span class="fw-bold">{{ t['price'] }} VND</span></td>
+                <td>Thời gian bay: <span class="fw-bold">{{ data['time_from'] }}</span></td>
+                <td>Giá tiền: <span class="fw-bold">{{ data['price'] }} VND</span></td>
             </tr>
             <tr>
-                <td colspan="2">Thời gian đặt vé: <span class="fw-bold">{{ t['booking_time'] }}</span></td>
+                <td colspan="2">Thời gian đặt vé: <span class="fw-bold">{{ data['time_payment'] }}</span></td>
             </tr>
         </tbody>
     </table>
 </div>
-{% endfor %}
+
 {% endblock %}

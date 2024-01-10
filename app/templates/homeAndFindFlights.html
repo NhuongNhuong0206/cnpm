@@ -17,7 +17,7 @@
         <div class="mt-2 ">
             <div>
                 <label id="ap_from" for="ap_from" class="form-label">Từ:</label>
-                <select name="from" class="form-select">
+                <select required name="from" class="form-select">
                     <option value="" selected></option>
                     {% for airport in airport_list %}
                     <option value="{{airport.id}}">{{ airport.name }}</option>
@@ -76,7 +76,7 @@
 <!--                anh ơi em không làm được cái homeand á, cái trang home tìm kiếm load xong phải còn giữ lại thông tin, anh làm đi, em có ghi js-->
                 <tbody>
                 {% for tuyen in dstuyen %}
-                <tr>
+                <tr id="info-flight" >
                     <th scope="col">{{tuyen.id}}</th>
                     <th scope="col">{{tuyen.name_flight_route}}</th>
                     <th scope="col" >{{airport_list[tuyen.bw_airport_id -1].name}}</th>
@@ -98,9 +98,7 @@
                     </th>
 
                     <th scope="col" class="center-vertically" >
-                        <form method="post" action="">
-                         <button  type="submit" value="{{ loop.index0 }}" name='button' class="btn btn-primary">Đặt Vé</button>
-                        </form>
+                         <button id="btn-submit" type="submit" value="{{ loop.index0 }}" name='button' class="btn btn-primary">Đặt Vé</button>
                     </th>
                 </tr>
                 {% endfor %}

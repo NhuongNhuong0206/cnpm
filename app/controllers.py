@@ -97,7 +97,6 @@ def get_stats(month):
 def momo_payment():
     if request.method == 'POST':
         data = request.get_json()
-        print('controller', data)
         # xử lý dữ liệu tại đây, ví dụ như lưu tạm vào session
         # để sau khi thanh toán thành công momo sẽ thông báo qua < def momo_ipn() > bên dưới
         # bắt sự kiện đó + dữ liệu lưu tạm trong session để lưu dữ liệu xuống db
@@ -109,4 +108,10 @@ def momo_ipn():
     print('Momo ipn receive signal!')
     result = dao.momo_ipn()
     return result
+
+
+def preview_ticket(id):
+    data = util.get_data_ticket(id)
+    return render_template('ticket.html', data=data)
+
 
