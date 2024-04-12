@@ -1,3 +1,5 @@
+import hashlib
+
 from flask import session
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, Enum, Boolean, DateTime, Date, PrimaryKeyConstraint
 from sqlalchemy.orm import relationship, backref
@@ -257,122 +259,45 @@ if __name__ == '__main__':
     with app.app_context():
         # db.create_all()
 
-        # import hashlib
-        # u = User(name='admin1',
-        #          passw1=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()),
-        #          user_role=UserRoleEnum.ADMIN,
-        #          address='Tp.HoChiMinhcity',
-        #          identification='ga',
-        #          email='damin@gmail.com',
-        #          nationality='VietNam' )
-        # db.session.add(u)
+        a1 = Airport(name='Tân Sơn Nhất')
+        a2 = Airport(name="Nội Bài")
+        a3 = Airport(name="Côn Đảo")
+        a4 = Airport(name="Cà Mau")
+        a5 = Airport(name="Cần Thơ")
+        a6 = Airport(name="Phú Bài")
+        a7 = Airport(name="Vân Đồn")
+        a8 = Airport(name="Đà Nẵng")
+        a9 = Airport(name="Phú Quốc")
+        a10 = Airport(name="Vinh")
 
-        # db.session.commit()
-        # db.create_all()
-        # #
-        # #
+        db.session.add_all([a1, a2, a3, a4, a5, a6, a7, a8, a9, a10])
+        db.session.commit()
 
-        # a1 = Airport(name='Tân Sơn Nhất')
-        # a2 = Airport(name="Nội Bài")
-        # a3 = Airport(name="Côn Đảo")
-        # a4 = Airport(name="Cà Mau")
-        # a5 = Airport(name="Cần Thơ")
-        # a6 = Airport(name="Phú Bài")
-        # a7 = Airport(name="Vân Đồn")
-        # a8 = Airport(name="Đà Nẵng")
-        # a9 = Airport(name="Phú Quốc")
-        # a10 = Airport(name="Vinh")
-        #
-        # db.session.add_all([a1, a2, a3, a4, a5, a6, a7, a8, a9, a10])
-        # db.session.commit()
+        b1=Flight(number_empty_seats=20,number_empty_books=15,active=1,deleted=0)
+        b2=Flight(number_empty_seats=15,number_empty_books=25,active=1,deleted=0)
+        b3=Flight(number_empty_seats=19,number_empty_books=16,active=1,deleted=0)
+        db.session.add_all([b1, b2, b3])
+        db.session.commit()
 
-        # fr = Flight_regulations(min_onl_ticket_booking_time=30, min_ticket_sale_time=20, min_flight_time=40,
-        #                    minimum_downtime=50, maximum_downtime=60)
-        # db.session.add(fr)
-        # db.session.commit()
-        #
-        #
-        # hoadon1 = Bill( date_and_time='2024-01-08 00:00:00', Payment_code='adadadasds')
-        # hoadon2 = Bill( date_and_time='2024-01-16 00:00:00', Payment_code='adadadasds')
-        # hoadon3 = Bill( date_and_time='2023-01-12 00:00:00', Payment_code='adadadasds')
-        # hoadon4 = Bill( date_and_time='2024-02-01 00:00:00', Payment_code='adadadasds')
-        # hoadon5 = Bill( date_and_time='2024-07-03 00:00:00', Payment_code='adadadasds')
-        # hoadon6 = Bill( date_and_time='2023-02-05 00:00:00', Payment_code='adadadasds')
+        g1= Seat_class(seat_class_name='Hạng thương gia')
+        g2 = Seat_class(seat_class_name='Hạng thường')
+        db.session.add_all([g1, g2])
+        db.session.commit()
 
-        # hoadon1 = Bill( date_and_time='2024-01-08 00:00:00', Payment_code='adadadasds')
-        # hoadon2 = Bill( date_and_time='2024-01-16 00:00:00', Payment_code='adadadasds')
-        # hoadon3 = Bill( date_and_time='2023-01-12 00:00:00', Payment_code='adadadasds')
-        # hoadon4 = Bill( date_and_time='2024-02-01 00:00:00', Payment_code='adadadasds')
-        # hoadon5 = Bill( date_and_time='2024-07-03 00:00:00', Payment_code='adadadasds')
-        # hoadon6 = Bill( date_and_time='2023-02-05 00:00:00', Payment_code='adadadasds')
-        # db.session.add_all([hoadon1, hoadon2, hoadon3, hoadon4, hoadon5, hoadon6])
-        # db.session.commit()
+        a = str(hashlib.md5('123456'.encode('utf-8')).hexdigest())
+        d = datetime(2003, 1, 22)
+        u = User(name='Hiền Vy', passw1=a, address='Bình Định', identification='333333333311', email='123vy@gmail.com',
+                 nationality='Việt Nam', birthdate=d)
+        db.session.add(u)
+        db.session.commit()
 
-        # loaive1 = Ticket_type(name_Ticket_type='Thương gia', fare_value=50000)
-        # loaive2 = Ticket_type(name_Ticket_type='Thường', fare_value=20000)
-        # db.session.add_all([loaive1, loaive2])
-        # db.session.commit()
-        #
-        # tuyenBay1 = Flight_route(departure_airport_id=1, arrival_airport_id=3, name_flight_route='TanSonNhat-ConDao', price = 200000)
-        # tuyenBay2 = Flight_route(departure_airport_id=7, arrival_airport_id=5, name_flight_route='VanDon-CanTho', price = 700000)
-        # tuyenBay3 = Flight_route(departure_airport_id=3, arrival_airport_id=6, name_flight_route='ConDao-PhuBai', price=800000)
-        # tuyenBay4 = Flight_route(departure_airport_id=7, arrival_airport_id=4, name_flight_route='VanDon-CaMau', price = 600000)
-        # tuyenBay5 = Flight_route(departure_airport_id=1, arrival_airport_id=5, name_flight_route='TanSonNhat-CanTho', price = 300000)
-        # tuyenBay6 = Flight_route(departure_airport_id=7, arrival_airport_id=4, name_flight_route='VanDon-CaMau', price = 530000)
-        # tuyenBay7 = Flight_route(departure_airport_id=2, arrival_airport_id=3, name_flight_route='NoiBai-ConDao', price = 4900000)
-        # db.session.add_all([tuyenBay1, tuyenBay2, tuyenBay3, tuyenBay4, tuyenBay5, tuyenBay6, tuyenBay7])
-        # db.session.commit()
+        a11 = str(hashlib.md5('123456'.encode('utf-8')).hexdigest())
+        d1 = datetime(2003, 1, 24)
+        userR = UserRoleEnum(2)
+        u1 = User(name='Hiền Vy admin', passw1=a11, address='Bình Định',user_role=userR, identification='333333333322', email='admin@gmail.com',
+                 nationality='Việt Nam', birthdate=d1)
+        db.session.add(u1)
+        db.session.commit()
 
-        # t1 = Ticket(bill_id=1, tick_type_id=1, status=True, flightRouter_id=3)
-        # t2 = Ticket(bill_id=2, tick_type_id=2, status=False, flightRouter_id=2)
-        # t3 = Ticket(bill_id=3, tick_type_id=1, status=True, flightRouter_id=2)
-        # t4 = Ticket(bill_id=4, tick_type_id=1, status=False, flightRouter_id=4)
-        # t5 = Ticket(bill_id=5, tick_type_id=2, status=True, flightRouter_id=5)
-        # t7 = Ticket(bill_id=6, tick_type_id=2, status=True, flightRouter_id=4)
-        # db.session.add_all([t1, t2, t3, t4, t5, t7])
-        # db.session.commit()
-        #
-        #
-        # x = type_luggage(name='xach tay', weight_max=3)
-        # db.session.add(x)
-        # db.session.commit()
-        #
-        # b1=Flight(number_empty_seats=20,number_empty_books=15,active=1,deleted=0)
-        # b2=Flight(number_empty_seats=15,number_empty_books=25,active=1,deleted=0)
-        # b3=Flight(number_empty_seats=19,number_empty_books=16,active=1,deleted=0)
-        # db.session.add_all([b1, b2, b3])
-        # db.session.commit()
 
-        # d1 = Flight_schedule(departure_time="2024-01-20 16:30:00", arrival_time="2024-01-20 18:30:00")
-        # d2 = Flight_schedule(departure_time="2024-01-21 16:30:00", arrival_time="2024-01-21 18:30:00")
-        # d3 = Flight_schedule(departure_time="2024-01-22 16:30:00", arrival_time="2024-01-22 18:30:00")
-        # db.session.add_all([d1, d2, d3])
-        # db.session.commit()
-        #
-        # c1 = Flight_route_Flight(flight_id=1,flight_route_id=2)
-        # c2 = Flight_route_Flight(flight_id=2, flight_route_id=3)
-        # c3 = Flight_route_Flight(flight_id=3, flight_route_id=4)
-        # db.session.add_all([c1, c2, c3])
-        # db.session.commit()
-        #
-
-        # e1=Flight_Flight_schedule(flight_id=1,flight_schedule_id=1)
-        # e2=Flight_Flight_schedule(flight_id=1,flight_schedule_id=2)
-        # e3=Flight_Flight_schedule(flight_id=2, flight_schedule_id=2)
-        # db.session.add_all([e1, e2, e3])
-        # db.session.commit()
-        #
-
-        # e1=Flight_Flight_schedule(flight_id=1,flight_schedule_id=1)
-        # e2=Flight_Flight_schedule(flight_id=1,flight_schedule_id=2)
-        # e3=Flight_Flight_schedule(flight_id=2, flight_schedule_id=2)
-        # db.session.add_all([e1, e2, e3])
-        # db.session.commit()
-
-        #
-        # g1= Seat_class(seat_class_name='Hạng thương gia')
-        # g2 = Seat_class(seat_class_name='Hạng thường')
-        # db.session.add_all([g1, g2])
-        # db.session.commit()
-        #
         pass
